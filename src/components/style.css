@@ -62,6 +62,16 @@ a {
   background-color: #000034;
 }
 
+{/* styles the h2 elements */}
+.Card h2 {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: #000034;
+}
+
 .tileCard {
   width: 627px;
   border: 2px solid gray;

@@ -8,19 +8,7 @@ class Card extends Component {
     super(props);
 
     this.state = {
-      minicard: {
-        name_0: "song 333",
-        campaign_id: 123,
-        artist0_1: "artist0_1",
-        artist0_2: "artist0_2",
-        artist0_3: "artist0_3",
-        submitted_0: 0,
-        submitted_time_0: "submitted_time_0",
-        selected_artist_0: "selected_artist_0",
-        correct_0: 0,
-        is_current_minicard: 1
-      },
-      tiles: []
+      tiles: {}
     };
 
     this.submitArtist = this.submitArtist.bind(this);
@@ -31,7 +19,16 @@ class Card extends Component {
     const { userProfile, getProfile } = this.props.auth;
     if (!userProfile) {
       getProfile((err, profile) => {
-        this.setState({ profile });
+        let camp = Math.floor(Math.random() * 1000) + 1;
+        this.setState({ profile, camp }, function() {
+          console.log('if');
+          let card = {
+            campaign_id: camp,
+            user_id: profile.sub
+          };
+          //Bingo.createminiCard(card);
+          this.saveminiCard(card);
+        });
       });
     } else {
       this.setState({ profile: userProfile });
@@ -59,24 +56,32 @@ class Card extends Component {
   }
 
   newCard(user) {
-    const numTiles = 1;
+    const numTiles = 3;
 
     for (let i = 0; i < numTiles; i++) {
       Promise.all([
         this.fetchSong(),
-        this.fetchArtists()])
-        .then((values) => {
-          this.prepTiles(values);
-        })
-        .then((values) => {
-          if (this.state.tiles.length > 0) {
-            //console.log('State: ', this.state);
-            this.saveminiCard();
-          }
-        })
-        //.then(console.log('loop'));
-      }
-      //this.saveCard();
+        this.fetchArtists()
+      ]).then((values) => {
+        this.prepTiles(values);
+      }).then((values) => {
+        if (this.state.tiles.length > (numTiles - 1)) {/*
+          let camp = Math.floor(Math.random() * 1000) + 1;
+          let card = {
+            campaign_id: camp,
+            user_id: "Darryll",
+            //tiles: JSON.stringify(this.state.tiles)
+            tiles: this.state.tiles[0]
+          };
+          console.log('tiles[0]: ', this.state.tiles[0]);
+          console.log('JSON.stringify(tiles[0]): ', JSON.stringify(this.state.tiles[0]));
+          this.saveminiCard(card);
+          this.setState({ card: card }, function() {
+            console.log('card: ', this.state.card);
+          });
+        */}
+      });
+    }
   }
 
   fetchSong() {
@@ -108,10 +113,17 @@ class Card extends Component {
   }
 
   updateTiles(arr) {
+    console.log('arr: ', arr);
     return new Promise((resolve, reject) => {
       this.setState(prevState => ({
         tiles: [...prevState.tiles, arr]
       }), function() {
+        let card = {
+          campaign_id: this.state.camp,
+          user_id: this.state.profile.sub
+        };
+        console.log('card: ', card);
+        //Bingo.updateminiCard()
         //console.log('State: ', this.state);
         resolve();
       });
@@ -182,10 +194,12 @@ class Card extends Component {
     }
   }
 
-  saveminiCard() {
-    //console.log('minicard: ', this.state.minicard);
-    Bingo.createminiCard(this.state.minicard).then(card => {
+  saveminiCard(card) {
+    Bingo.createminiCard(card).then(card => {
       //console.log('Card response: ', card);
+      this.setState({ card_id: card.id }, function() {
+        console.log('card id: ', this.state.card_id);
+      })
     })
   }
 

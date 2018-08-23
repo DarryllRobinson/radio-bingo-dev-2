@@ -3,200 +3,92 @@ const db = new sqlite3.Database('./database.sqlite');
 
 db.serialize(function() {
   db.run('CREATE TABLE IF NOT EXISTS `Song` ( ' +
-           '`id` INTEGER NOT NULL, ' +
-           '`name` TEXT NOT NULL, ' +
-           '`artist` TEXT NOT NULL, ' +
-           '`is_current_song` INTEGER NOT NULL DEFAULT 1, ' +
-           'PRIMARY KEY(`id`) )');
-});
-
-db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS `Artist` ( ' +
-           '`id` INTEGER NOT NULL, ' +
-           '`artist` TEXT NOT NULL, ' +
-           '`is_current_artist` INTEGER NOT NULL DEFAULT 1, ' +
-           'PRIMARY KEY(`id`) )');
-});
-
-db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS `User` ( ' +
-           '`id` TEXT NOT NULL, ' +
-           '`name` TEXT NOT NULL, ' +
-           '`picture` TEXT NOT NULL, ' +
-           '`campaign1` TEXT, ' +
-           '`card1` INTEGER, ' +
-           '`campaign2` TEXT, ' +
-           '`card2` INTEGER, ' +
-           '`campaign3` TEXT, ' +
-           '`card3` INTEGER, ' +
-           '`campaign4` TEXT, ' +
-           '`card4` INTEGER, ' +
-           '`campaign5` TEXT, ' +
-           '`card5` INTEGER, ' +
-           '`is_current_user` INTEGER NOT NULL DEFAULT 1, ' +
-           'PRIMARY KEY(`id`) )');
-});
-
-db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS `Campaign` ( ' +
-           '`id` INTEGER NOT NULL, ' +
-           '`campaign_name` TEXT NOT NULL, ' +
-           '`organisation` TEXT NOT NULL, ' +
-           '`start_date` TEXT NOT NULL, ' +
-           '`end_date` TEXT NOT NULL, ' +
-           '`num_contestants` INTEGER NOT NULL DEFAULT 0, ' +
-           '`is_current_campaign` INTEGER NOT NULL DEFAULT 1, ' +
-           'PRIMARY KEY(`id`) )');
-});
-
-db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS `MiniCard` ( ' +
     '`id` INTEGER NOT NULL, ' +
-    '`campaign_id` INTEGER NOT NULL, ' +
-    '`name_0` TEXT NOT NULL, ' +
-    '`artist0_1` TEXT NOT NULL, ' +
-    '`artist0_2` TEXT NOT NULL, ' +
-    '`artist0_3` TEXT NOT NULL, ' +
-    '`submitted_0` INTEGER, ' +
-    '`submitted_time_0` TEXT, ' +
-    '`selected_artist_0` TEXT, ' +
-    '`correct_0` INTEGER, ' +
-    '`is_current_minicard` INTEGER NOT NULL DEFAULT 1, ' +
-    'PRIMARY KEY(`id`) )');
-});
+     '`name` TEXT NOT NULL, ' +
+     '`artist` TEXT NOT NULL, ' +
+     'PRIMARY KEY(`id`) )');
 
-/*db.serialize(function() {
+  db.run('CREATE TABLE IF NOT EXISTS `Artist` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`artist` TEXT NOT NULL, ' +
+    'PRIMARY KEY(`id`) )');
+
+  db.run('CREATE TABLE IF NOT EXISTS `User` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`user_id` TEXT NOT NULL, ' +
+    '`name` TEXT NOT NULL, ' +
+    '`picture` TEXT NOT NULL, ' +
+    '`campaign_id` INTEGER, ' +
+    '`campaign` TEXT, ' +
+    '`is_current_user` INTEGER NOT NULL DEFAULT 1, ' +
+    'PRIMARY KEY(`id`), ' +
+    'FOREIGN KEY(`campaign_id`) REFERENCES `Campaign`(`id`) )');
+
+  db.run('CREATE TABLE IF NOT EXISTS `Tile` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`song` TEXT NOT NULL, ' +
+    '`artist_1` TEXT NOT NULL, ' +
+    '`artist_2` TEXT NOT NULL, ' +
+    '`artist_3` TEXT NOT NULL, ' +
+    '`submitted` INTEGER NOT NULL DEFAULT 0, ' +
+    '`submitted_artist` TEXT, ' +
+    '`submitted_time` TEXT, ' +
+    '`correct` INTEGER DEFAULT 0, ' +
+    '`card_id` INTEGER NOT NULL, ' +
+    'PRIMARY KEY(`id`), ' +
+    'FOREIGN KEY(`card_id`) REFERENCES `Card`(`id`) )');
+
   db.run('CREATE TABLE IF NOT EXISTS `Card` ( ' +
-           '`id` INTEGER NOT NULL, ' +
-           '`name_0` TEXT NOT NULL, ' +
-           '`artist0_1` TEXT, ' +
-           '`artist0_2` TEXT, ' +
-           '`artist0_3` TEXT, ' +
-           '`submitted_0` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_0` TEXT, ' +
-           '`selected_artist_0` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_0` INTEGER, ' +
-           '`name_1` TEXT NOT NULL, ' +
-           '`artist1_1` TEXT, ' +
-           '`artist1_2` TEXT, ' +
-           '`artist1_3` TEXT, ' +
-           '`submitted_1` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_1` TEXT, ' +
-           '`selected_artist_1` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_1` INTEGER, ' +
-           '`name_2` TEXT NOT NULL, ' +
-           '`artist2_1` TEXT, ' +
-           '`artist2_2` TEXT, ' +
-           '`artist2_3` TEXT, ' +
-           '`submitted_2` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_2` TEXT, ' +
-           '`selected_artist_2` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_2` INTEGER, ' +
-           '`name_3` TEXT NOT NULL, ' +
-           '`artist3_1` TEXT, ' +
-           '`artist3_2` TEXT, ' +
-           '`artist3_3` TEXT, ' +
-           '`submitted_3` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_3` TEXT, ' +
-           '`selected_artist_3` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_3` INTEGER, ' +
-           '`name_4` TEXT NOT NULL, ' +
-           '`artist4_1` TEXT, ' +
-           '`artist4_2` TEXT, ' +
-           '`artist4_3` TEXT, ' +
-           '`submitted_4` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_4` TEXT, ' +
-           '`selected_artist_4` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_4` INTEGER, ' +
-           '`name_5` TEXT NOT NULL, ' +
-           '`artist5_1` TEXT, ' +
-           '`artist5_2` TEXT, ' +
-           '`artist5_3` TEXT, ' +
-           '`submitted_5` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_5` TEXT, ' +
-           '`selected_artist_5` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_5` INTEGER, ' +
-           '`name_6` TEXT NOT NULL, ' +
-           '`artist6_1` TEXT, ' +
-           '`artist6_2` TEXT, ' +
-           '`artist6_3` TEXT, ' +
-           '`submitted_6` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_6` TEXT, ' +
-           '`selected_artist_6` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_6` INTEGER, ' +
-           '`name_7` TEXT NOT NULL, ' +
-           '`artist7_1` TEXT, ' +
-           '`artist7_2` TEXT, ' +
-           '`artist7_3` TEXT, ' +
-           '`submitted_7` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_7` TEXT, ' +
-           '`selected_artist_7` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_7` INTEGER, ' +
-           '`name_8` TEXT NOT NULL, ' +
-           '`artist8_1` TEXT, ' +
-           '`artist8_2` TEXT, ' +
-           '`artist8_3` TEXT, ' +
-           '`submitted_8` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_8` TEXT, ' +
-           '`selected_artist_8` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_8` INTEGER, ' +
-           '`name_9` TEXT NOT NULL, ' +
-           '`artist9_1` TEXT, ' +
-           '`artist9_2` TEXT, ' +
-           '`artist9_3` TEXT, ' +
-           '`submitted_9` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_9` TEXT, ' +
-           '`selected_artist_9` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_9` INTEGER, ' +
-           '`name_10` TEXT NOT NULL, ' +
-           '`artist10_1` TEXT, ' +
-           '`artist10_2` TEXT, ' +
-           '`artist10_3` TEXT, ' +
-           '`submitted_10` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_10` TEXT, ' +
-           '`selected_artist_10` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_10` INTEGER, ' +
-           '`name_11` TEXT NOT NULL, ' +
-           '`artist11_1` TEXT, ' +
-           '`artist11_2` TEXT, ' +
-           '`artist11_3` TEXT, ' +
-           '`submitted_11` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_11` TEXT, ' +
-           '`selected_artist_11` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_11` INTEGER, ' +
-           '`name_12` TEXT NOT NULL, ' +
-           '`artist12_1` TEXT, ' +
-           '`artist12_2` TEXT, ' +
-           '`artist12_3` TEXT, ' +
-           '`submitted_12` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_12` TEXT, ' +
-           '`selected_artist_12` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_12` INTEGER, ' +
-           '`name_13` TEXT NOT NULL, ' +
-           '`artist13_1` TEXT, ' +
-           '`artist13_2` TEXT, ' +
-           '`artist13_3` TEXT, ' +
-           '`submitted_13` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_13` TEXT, ' +
-           '`selected_artist_13` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_13` INTEGER, ' +
-           '`name_14` TEXT NOT NULL, ' +
-           '`artist14_1` TEXT, ' +
-           '`artist14_2` TEXT, ' +
-           '`artist14_3` TEXT, ' +
-           '`submitted_14` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_14` TEXT, ' +
-           '`selected_artist_14` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_14` INTEGER, ' +
-           '`name_15` TEXT NOT NULL, ' +
-           '`artist15_1` TEXT, ' +
-           '`artist15_2` TEXT, ' +
-           '`artist15_3` TEXT, ' +
-           '`submitted_15` INTEGER NOT NULL DEFAULT 0, ' +
-           '`submitted_time_15` TEXT, ' +
-           '`selected_artist_15` TEXT NOT NULL DEFAULT 0, ' +
-           '`correct_15` INTEGER, ' +
-           '`is_current_card` INTEGER NOT NULL DEFAULT 1, ' +
-           'PRIMARY KEY(`id`) )');
+    '`id` INTEGER NOT NULL, ' +
+    '`numTiles` INTEGER NOT NULL, ' +
+    '`user_id` INTEGER NOT NULL, ' +
+    '`campaign_id` INTEGER NOT NULL, ' +
+    '`is_current_card` INTEGER NOT NULL DEFAULT 1, ' +
+    'PRIMARY KEY(`id`), ' +
+    'FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) )');
+
+db.run('CREATE TABLE IF NOT EXISTS `Campaign` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`campaign_name` TEXT NOT NULL, ' +
+    '`organisation` TEXT NOT NULL, ' +
+    '`start_date` TEXT NOT NULL, ' +
+    '`end_date` TEXT NOT NULL, ' +
+    '`num_contestants` INTEGER NOT NULL DEFAULT 0, ' +
+    '`is_current_campaign` INTEGER NOT NULL DEFAULT 1, ' +
+    'PRIMARY KEY(`id`) )');
+
+
+
+    
+      db.run('CREATE TABLE IF NOT EXISTS `Employee` ( ' +
+               '`id` INTEGER NOT NULL, ' +
+               '`name` TEXT NOT NULL, ' +
+               '`position` TEXT NOT NULL, ' +
+               '`wage` INTEGER NOT NULL, ' +
+               '`is_current_employee` INTEGER NOT NULL DEFAULT 1, ' +
+               'PRIMARY KEY(`id`) )');
+
+      db.run('CREATE TABLE IF NOT EXISTS `Timesheet` ( ' +
+               '`id` INTEGER NOT NULL, ' +
+               '`hours` INTEGER NOT NULL, ' +
+               '`rate` INTEGER NOT NULL, ' +
+               '`date` INTEGER NOT NULL, ' +
+               '`employee_id` INTEGER NOT NULL, ' +
+               'PRIMARY KEY(`id`), ' +
+               'FOREIGN KEY(`employee_id`) REFERENCES `Employee`(`id`) )');
+
+      db.run('CREATE TABLE IF NOT EXISTS `Menu` ( ' +
+               '`id` INTEGER NOT NULL, ' +
+               '`title` TEXT NOT NULL, ' +
+               'PRIMARY KEY(`id`) )');
+
+      db.run('CREATE TABLE IF NOT EXISTS `MenuItem` ( ' +
+               '`id` INTEGER NOT NULL, ' +
+               '`name` TEXT NOT NULL, ' +
+               '`description` TEXT, ' +
+               '`inventory` INTEGER NOT NULL, ' +
+               '`price` INTEGER NOT NULL, ' +
+               '`menu_id` INTEGER NOT NULL, ' +
+               'PRIMARY KEY(`id`), ' +
+               'FOREIGN KEY(`menu_id`) REFERENCES `Menu`(`id`) )');
 });
-*/

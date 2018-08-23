@@ -97,6 +97,25 @@ Bingo.createminiCard = minicard => {
   });
 };
 
+Bingo.updateminiCard = minicard => {
+  const url = `${baseUrl}/minicards/${minicard.id}`;
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({minicard: minicard})
+  };
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return camelcaseKeys(jsonResponse.minicard);
+    });
+  });
+};
+
 /*Bingo.updateSong = song => {
   const url = `${baseUrl}/songs/${song.id}`;
   const fetchOptions = {

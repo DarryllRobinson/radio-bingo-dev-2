@@ -35,32 +35,20 @@ usersRouter.get('/:userId', (req, res, next) => {
 });
 
 usersRouter.post('/', (req, res, next) => {
-  const name = req.body.user.name,
+  const user_id = req.body.user.user_id,
+        name = req.body.user.name,
         picture = req.body.user.picture,
-        song_0 = req.body.user.song_0,
-        artist_0 = req.body.user.artist_0,
-        artist_0_1 = req.body.user.artist_0_1,
-        artist_0_2 = req.body.user.artist_0_2,
-        selected_artist_0 = req.body.user.selected_artist_0,
-        submitted_0 = req.body.user.submitted_0,
-        correct_0 = req.body.user.correct_0,
         isCurrentuser = req.body.user.isCurrentuser === 0 ? 0 : 1;
-  if (!name || !picture || !song_0 || !artist_0 || !artist_0_1 || !artist_0_2 || !selected_artist_0 || !submitted_0 || !correct_0) {
+  if (!user_id || !name || !picture) {
     return res.sendStatus(400);
   }
 
-  const sql = 'INSERT INTO user (name, picture, song_0, artist_0, artist_0_1, artist_0_2, selected_artist_0, submitted_0, correct_0, is_current_user)' +
-      'VALUES ($name, $picture, $song_0, $artist_0, $artist_0_1, $artist_0_2, $selected_artist_0, $submitted_0, $correct_0, $isCurrentuser)';
+  const sql = 'INSERT INTO user (user_id, name, picture, is_current_user)' +
+      'VALUES ($user_id, $name, $picture, $isCurrentuser)';
   const values = {
+    $user_id: user_id,
     $name: name,
     $picture: picture,
-    $song_0: song_0,
-    $artist_0: artist_0,
-    $artist_0_1: artist_0_1,
-    $artist_0_2: artist_0_2,
-    $selected_artist_0: selected_artist_0,
-    $submitted_0: submitted_0,
-    $correct_0: correct_0,
     $isCurrentuser: isCurrentuser
   };
 
@@ -77,34 +65,20 @@ usersRouter.post('/', (req, res, next) => {
 });
 
 usersRouter.put('/:userId', (req, res, next) => {
-  const name = req.body.user.name,
+  const user_id = req.body.user.user_id,
+        name = req.body.user.name,
         picture = req.body.user.picture,
-        song_0 = req.body.user.song_0,
-        artist_0 = req.body.user.artist_0,
-        artist_0_1 = req.body.user.artist_0_1,
-        artist_0_2 = req.body.user.artist_0_2,
-        selected_artist_0 = req.body.user.selected_artist_0,
-        submitted_0 = req.body.user.submitted_0,
-        correct_0 = req.body.user.correct_0,
         isCurrentuser = req.body.user.isCurrentuser === 0 ? 0 : 1;
-  if (!name || !picture || !song_0 || !artist_0 || !artist_0_1 || !artist_0_2 || !selected_artist_0 || !submitted_0 || !correct_0) {
+  if (!user_id || !name || !picture) {
     return res.sendStatus(400);
   }
 
-  const sql = 'UPDATE user SET name = $name, picture = $picture, ' +
-      'song_0 = $song_0, artist_0 = $artist_0, artist_0_1 = $artist_0_1, artist_0_2 = $artist_0_2, ' +
-      'selected_artist_0 = $selected_artist_0, submitted_0 = $submitted_0, correct_0 = $correct_0, is_current_user = $isCurrentuser ' +
+  const sql = 'UPDATE user SET user_id = $user_id, name = $name, picture = $picture, correct_0 = $correct_0, is_current_user = $isCurrentuser ' +
       'WHERE user.id = $userId';
   const values = {
+    $user_id: user_id,
     $name: name,
     $picture: picture,
-    $song_0: song_0,
-    $artist_0: artist_0,
-    $artist_0_1: artist_0_1,
-    $artist_0_2: artist_0_2,
-    $selected_artist_0: selected_artist_0,
-    $submitted_0: submitted_0,
-    $correct_0: correct_0,
     $isCurrentuser: isCurrentuser,
     $userId: req.params.userId
   };
