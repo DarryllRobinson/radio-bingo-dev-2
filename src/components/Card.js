@@ -32,7 +32,7 @@ class Card extends Component {
   }
 
   componentDidMount() {
-    const numTiles = 15;
+    const numTiles = 16;
     const userId = 2;  // must figure out the actual user_id
     const campaignId = 3;   // ditto here
     const cardId = 4;   // and here
@@ -42,111 +42,16 @@ class Card extends Component {
       this.newCard(numTiles, userId, campaignId);
     };
 
-    console.log('initial this.state.tiles: ', this.state.tiles);
-
     Bingo.getTiles(cardId).then(response => {
 
-      console.log('response: ', response);
       const card = Object.keys(response).map((index) => {
         const tile = [];
-        console.log('response[index]: ', response[index]);
         tile.push(response[index]);
-        console.log('tile: ', tile);
         return tile;
       });
-      //tile.push(response);
-      //console.log('tile: ', tile);
 
-      this.setState({ tiles: card }, function() {
-        console.log('updated this.state.tiles: ', this.state.tiles);
-      });
-      console.log('updated this.state.tiles: ', this.state.tiles);
+      this.setState({ tiles: card });
     });
-
-      /*Object.keys(card).map((i) => {
-        console.log('Object: ', card[i]);
-        let tile = {
-          id: card[i].id,
-          song: card[i].song,
-          artist_1: card[i].artist_1,
-          artist_2: card[i].artist_2,
-          artist_3: card[i].artist_3,
-          card_id: card[i].card_id
-        };
-        tiles.push(tile);
-        return tile;    // I don't even know why this is here
-      });*/
-      /*const tile = [{
-        id: 1,
-        name: "song",
-        artist_1: "artist_1",
-        artist_2: "artist_2",
-        artist_3: "artist_3",
-        cardId: "cardId"
-      },
-      {
-        id: 2,
-        name: "song",
-        artist_1: "artist_1",
-        artist_2: "artist_2",
-        artist_3: "artist_3",
-        cardId: "cardId"
-      },
-      {
-        id: 3,
-        name: "song",
-        artist_1: "artist_1",
-        artist_2: "artist_2",
-        artist_3: "artist_3",
-        cardId: "cardId"
-      }];*/
-
-
-    /*Bingo.getTiles(cardId).then(tile => {
-      if (tile) {
-        this.setState({
-          tiles: tile
-        }, function() {
-          console.log('updated this.state.tiles: ', this.state.tiles);
-          return;
-        });
-      }
-    });*/
-
-    //this.setState({ loading: 'true' });
-
-    /*this.fetchCard(cardId)
-    .then((card) => {
-      let tiles = [];
-      Object.keys(card).map((i) => {
-        console.log('Object: ', card[i]);
-        let tile = {
-          id: card[i].id,
-          song: card[i].song,
-          artist_1: card[i].artist_1,
-          artist_2: card[i].artist_2,
-          artist_3: card[i].artist_3,
-          card_id: card[i].card_id
-        };
-        tiles.push(tile);
-        return tile;    // I don't even know why this is here
-      });
-      console.log('Final tiles: ', tiles);
-      this.setState({ tiles: tiles }, function() {
-        console.log('Completed setting the state');
-      });
-
-    });*/
-
-    /*this.fetchCard(cardId)
-    .then((card) => {
-      this.pushToState(card)
-      .then((response) => {
-        this.setState({ tiles: response }, function() {
-          console.log('Final state: ', this.state.tiles);
-        });
-      });
-    });*/
   }
 
   checkDB(id) {
@@ -245,19 +150,6 @@ class Card extends Component {
     return promise;
   }
 
-  /*pushToState(card) {
-    const promise = new Promise((resolve, reject) => {
-      Object.keys(card).map((i) => {
-        console.log('Object: ', card[i]);
-        let tiles = [];
-        tiles.push(card[i]);
-      });
-      console.log('pushToState resolve');
-      resolve('tiles');
-    });
-    return promise;
-  }*/
-
   submitArtist(e) {
     e.preventDefault();
     console.log('The link was clicked.');
@@ -267,10 +159,6 @@ class Card extends Component {
   }
 
   renderCards() {
-    console.log('renderCards');
-    //console.log('this.state.tiles[0].id: ', this.state.tiles[0].id);
-    //console.log('this.state.tiles.length before: ', this.state.tiles.length);
-    //console.log('current state: ', this.state);
     if (this.state.tiles.length > 0) {
       return this.state.tiles.map(tile => {
         return (
@@ -319,7 +207,6 @@ class Card extends Component {
                   </h4>
                 </div>
               </FlexyFlipCard>
-
           </div>
         );
       });
