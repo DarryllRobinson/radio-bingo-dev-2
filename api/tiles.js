@@ -4,24 +4,20 @@ const tilesRouter = express.Router();
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
-/*tilesRouter.param('cardId', (req, res, next, cardId) => {
-  console.log('cardId: ', cardId);
+tilesRouter.param('cardId', (req, res, next, cardId) => {
   const sql = 'SELECT * FROM tile WHERE card_id = $cardId';
   const values = {$cardId: cardId};
-  console.log('param sql: ', sql);
-  console.log('param values: ', values);
   db.all(sql, values, (error, tile) => {
     if (error) {
       next(error);
     } else if (tile) {
-      console.log('param req:tile: ', req.tile);
       req.tile = tile;
       next();
     } else {
       res.sendStatus(404);
     }
   });
-});*/
+});
 
 tilesRouter.get('/', (req, res, next) => {
   db.all('SELECT * FROM tile',
@@ -35,13 +31,7 @@ tilesRouter.get('/', (req, res, next) => {
 });
 
 tilesRouter.get('/:cardId', (req, res, next) => {
-  db.all('SELECT * FROM tile WHERE card_id = 14', (err, tiles) => {
-    if (err) {
-      next(err);
-    } else {
-      res.status(200).json({ tiles: tiles });
-    }
-  });
+  res.status(200).json({tile: req.tile});
 });
 
 tilesRouter.post('/', (req, res, next) => {

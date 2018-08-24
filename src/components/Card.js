@@ -9,8 +9,8 @@ class Card extends Component {
 
     this.state = {
       card: {},
-      tiles: {}
-    };
+      tiles: null
+    }
 
     this.submitArtist = this.submitArtist.bind(this);
   }
@@ -35,18 +35,118 @@ class Card extends Component {
     const numTiles = 15;
     const userId = 2;  // must figure out the actual user_id
     const campaignId = 3;   // ditto here
-    const cardId = 14;   // and here
+    const cardId = 4;   // and here
     const exists = true; // need to integrate the user table eventually
 
-
-
-    //if (!this.checkDB(user_id)) {
+    if (!exists) {
       this.newCard(numTiles, userId, campaignId);
-      // must still check if campaign exists
-      // and then check if the campaign has started
-      // and then check if the campaign has ended
-    //}
-    //console.log('exists');
+    };
+
+    console.log('initial this.state.tiles: ', this.state.tiles);
+
+    Bingo.getTiles(cardId).then(response => {
+
+      console.log('response: ', response);
+      const card = Object.keys(response).map((index) => {
+        const tile = [];
+        console.log('response[index]: ', response[index]);
+        tile.push(response[index]);
+        console.log('tile: ', tile);
+        return tile;
+      });
+      //tile.push(response);
+      //console.log('tile: ', tile);
+
+      this.setState({ tiles: card }, function() {
+        console.log('updated this.state.tiles: ', this.state.tiles);
+      });
+      console.log('updated this.state.tiles: ', this.state.tiles);
+    });
+
+      /*Object.keys(card).map((i) => {
+        console.log('Object: ', card[i]);
+        let tile = {
+          id: card[i].id,
+          song: card[i].song,
+          artist_1: card[i].artist_1,
+          artist_2: card[i].artist_2,
+          artist_3: card[i].artist_3,
+          card_id: card[i].card_id
+        };
+        tiles.push(tile);
+        return tile;    // I don't even know why this is here
+      });*/
+      /*const tile = [{
+        id: 1,
+        name: "song",
+        artist_1: "artist_1",
+        artist_2: "artist_2",
+        artist_3: "artist_3",
+        cardId: "cardId"
+      },
+      {
+        id: 2,
+        name: "song",
+        artist_1: "artist_1",
+        artist_2: "artist_2",
+        artist_3: "artist_3",
+        cardId: "cardId"
+      },
+      {
+        id: 3,
+        name: "song",
+        artist_1: "artist_1",
+        artist_2: "artist_2",
+        artist_3: "artist_3",
+        cardId: "cardId"
+      }];*/
+
+
+    /*Bingo.getTiles(cardId).then(tile => {
+      if (tile) {
+        this.setState({
+          tiles: tile
+        }, function() {
+          console.log('updated this.state.tiles: ', this.state.tiles);
+          return;
+        });
+      }
+    });*/
+
+    //this.setState({ loading: 'true' });
+
+    /*this.fetchCard(cardId)
+    .then((card) => {
+      let tiles = [];
+      Object.keys(card).map((i) => {
+        console.log('Object: ', card[i]);
+        let tile = {
+          id: card[i].id,
+          song: card[i].song,
+          artist_1: card[i].artist_1,
+          artist_2: card[i].artist_2,
+          artist_3: card[i].artist_3,
+          card_id: card[i].card_id
+        };
+        tiles.push(tile);
+        return tile;    // I don't even know why this is here
+      });
+      console.log('Final tiles: ', tiles);
+      this.setState({ tiles: tiles }, function() {
+        console.log('Completed setting the state');
+      });
+
+    });*/
+
+    /*this.fetchCard(cardId)
+    .then((card) => {
+      this.pushToState(card)
+      .then((response) => {
+        this.setState({ tiles: response }, function() {
+          console.log('Final state: ', this.state.tiles);
+        });
+      });
+    });*/
   }
 
   checkDB(id) {
@@ -111,37 +211,52 @@ class Card extends Component {
     return Promise.all(fetchPromises);
   }
 
-  prepTiles(arr) {
-    const tile = [];
-
-    tile.push({
-      id: arr[0].id,
-      name: arr[0].name,
+  prepTiles(arr, cardId) {
+    const tile = {
+      song: arr[0].name,
       artist_1: arr[0].artist,
       artist_2: arr[1][0].artist,
-      artist_3: arr[1][1].artist
-    });
-
-    this.updateTiles(tile);
+      artist_3: arr[1][1].artist,
+      card_id: cardId
+    };
+    //console.log('tile: ', tile);
+    Bingo.createTile(tile);
   }
 
   updateTiles(arr) {
-    console.log('arr: ', arr);
+    //console.log('arr: ', arr);
     return new Promise((resolve, reject) => {
       this.setState(prevState => ({
         tiles: [...prevState.tiles, arr]
       }), function() {
-        let card = {
-          campaign_id: this.state.camp,
-          user_id: this.state.profile.sub
-        };
-        console.log('card: ', card);
-        //Bingo.updateminiCard()
-        //console.log('State: ', this.state);
+        console.log('State: ', this.state);
         resolve();
       });
     });
   }
+
+  fetchCard(cardId) {
+    const promise = new Promise((resolve, reject) => {
+      Bingo.getTiles(cardId).then(card => {
+        resolve(card);
+      });
+    });
+
+    return promise;
+  }
+
+  /*pushToState(card) {
+    const promise = new Promise((resolve, reject) => {
+      Object.keys(card).map((i) => {
+        console.log('Object: ', card[i]);
+        let tiles = [];
+        tiles.push(card[i]);
+      });
+      console.log('pushToState resolve');
+      resolve('tiles');
+    });
+    return promise;
+  }*/
 
   submitArtist(e) {
     e.preventDefault();
@@ -152,6 +267,10 @@ class Card extends Component {
   }
 
   renderCards() {
+    console.log('renderCards');
+    //console.log('this.state.tiles[0].id: ', this.state.tiles[0].id);
+    //console.log('this.state.tiles.length before: ', this.state.tiles.length);
+    //console.log('current state: ', this.state);
     if (this.state.tiles.length > 0) {
       return this.state.tiles.map(tile => {
         return (
@@ -163,7 +282,7 @@ class Card extends Component {
                   backBackgroundColor="#000034"
               >
                 <div ref="flipper">
-                  <h3>{tile[0].name}</h3>
+                  <h3>{tile[0].song}</h3>
                   <br />
                   <button className="select">Select artist</button>
                 </div>
@@ -207,25 +326,17 @@ class Card extends Component {
     }
   }
 
-  saveminiCard(card) {
-    Bingo.createminiCard(card).then(card => {
-      //console.log('Card response: ', card);
-      this.setState({ card_id: card.id }, function() {
-        console.log('card id: ', this.state.card_id);
-      })
-    })
-  }
-
-  saveCard() {
-    //console.log('this.state.tiles[0]: ', this.state.tiles[0]);
-    Bingo.createminiCard(this.state.tiles[0]).then(card => {
-      console.log('Card response: ', card);
-    })
-  }
-
   render() {
-    const { profile } = this.state;
 
+    if (!this.state.tiles) {
+      return (
+        <div className="Landing">
+          Not loading
+        </div>
+      )
+    }
+
+    const { profile } = this.state;
     return (
       <div className="Landing">
         <h2>{profile.nickname + String.fromCharCode(39)}s Radio Bingo Board</h2>
@@ -234,7 +345,7 @@ class Card extends Component {
 
           <div className="item-list">
             {this.renderCards()}
-            </div>
+          </div>
 
         </div>
 

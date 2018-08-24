@@ -54,6 +54,19 @@ Bingo.getUser = user_id => {
   });
 };
 
+Bingo.getTiles = cardId => {
+  const url = `${baseUrl}/tiles/${cardId}`;
+  //console.log('url: ', url);
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      return camelcaseKeys(jsonResponse.tile);
+    });
+  });
+};
+
 Bingo.createCard = card => {
   const url = `${baseUrl}/cards`;
   const fetchOptions = {
@@ -65,102 +78,37 @@ Bingo.createCard = card => {
   };
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
-      console.log('error');
+      console.log('card error');
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
-      console.log('saved');
+      console.log('card saved');
       return camelcaseKeys(jsonResponse.card);
     });
   });
 };
 
-Bingo.createminiCard = minicard => {
-  const url = `${baseUrl}/minicards`;
+Bingo.createTile = tile => {
+  const url = `${baseUrl}/tiles`;
   const fetchOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({minicard: minicard})
+    body: JSON.stringify({ tile: tile })
   };
-  //console.log('body: ', fetchOptions.body);
+
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
-      console.log('error');
+      console.log('tile error');
       return new Promise(resolve => resolve(null));
-    }
+    };
+
     return response.json().then(jsonResponse => {
-      console.log('saved');
-      return camelcaseKeys(jsonResponse.minicard);
+      console.log('tile saved');
+      return camelcaseKeys(jsonResponse.tile);
     });
   });
-};
-
-Bingo.updateminiCard = minicard => {
-  const url = `${baseUrl}/minicards/${minicard.id}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({minicard: minicard})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return camelcaseKeys(jsonResponse.minicard);
-    });
-  });
-};
-
-/*Bingo.updateSong = song => {
-  const url = `${baseUrl}/songs/${song.id}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({song: song})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return camelcaseKeys(jsonResponse.song);
-    });
-  });
-};
-
-Bingo.restoreSong = song => {
-  song.isCurrentSong = 1;
-  const url = `${baseUrl}/songs/${song.id}`;
-  const fetchOptions = {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({song: song})
-  };
-  return fetch(url, fetchOptions).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return camelcaseKeys(jsonResponse.song);
-    });
-  });
-};
-
-Bingo.deleteSong = id => {
-  const url = `${baseUrl}/songs/${id}`;
-  const fetchOptions = {
-    method: 'DELETE'
-  };
-  return fetch(url, fetchOptions);
-};*/
+}
 
 export default Bingo;
