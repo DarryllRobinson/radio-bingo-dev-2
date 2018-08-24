@@ -5,9 +5,10 @@ const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
 usersRouter.param('userId', (req, res, next, userId) => {
-  const sql = 'SELECT * FROM user WHERE user.id = $userId';
+  //const sql = 'SELECT * FROM user WHERE user.id = $userId';
+  const sql = 'SELECT * FROM user WHERE user_id = $userId';
   const values = {$userId: userId};
-  db.get(sql, values, (error, user) => {
+  db.all(sql, values, (error, user) => {
     if (error) {
       next(error);
     } else if (user) {
@@ -34,7 +35,7 @@ usersRouter.get('/:userId', (req, res, next) => {
   res.status(200).json({user: req.user});
 });
 
-usersRouter.post('/', (req, res, next) => {
+/*usersRouter.post('/', (req, res, next) => {
   const user_id = req.body.user.user_id,
         name = req.body.user.name,
         picture = req.body.user.picture,
@@ -53,6 +54,39 @@ usersRouter.post('/', (req, res, next) => {
   };
 
   db.run(sql, values, function(error) {
+    if (error) {
+      next(error);
+    } else {
+      db.get(`SELECT * FROM user WHERE user.id = ${this.lastID}`,
+        (error, user) => {
+          res.status(201).json({user: user});
+        });
+    }
+  });
+});*/
+
+usersRouter.post('/', (req, res, next) => {
+  const user_id = req.body.user.user_id,
+        name = req.body.user.name,
+        picture = req.body.user.picture,
+        campaign_id = req.body.user.campaign_id,
+        is_current_user = req.body.user.is_current_user === 0 ? 0 : 1;
+  if (!user_id || !name || !picture || !campaign_id) {
+    return res.sendStatus(400);
+  }
+
+  const sql = 'INSERT INTO user (user_id, name, picture, campaign_id, is_current_user)' +
+      'VALUES ($user_id, $name, $picture, $campaign_id, $is_current_user)';
+  const values = {
+    $user_id: user_id,
+    $name: name,
+    $picture: picture,
+    $campaign_id: campaign_id,
+    $is_current_user: is_current_user
+  };
+
+  db.run(sql, values, function(error) {
+  console.log('sql: ', sql);
     if (error) {
       next(error);
     } else {

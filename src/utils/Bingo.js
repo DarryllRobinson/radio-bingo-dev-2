@@ -4,20 +4,6 @@ import 'whatwg-fetch';
 const Bingo = {};
 const baseUrl = 'http://localhost:4000/api';
 
-/*Bingo.getSongs = () => {
-  const url = `${baseUrl}/songs`;
-
-  return fetch(url).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve([]));
-    }
-
-    return response.json().then(jsonResponse => {
-      return jsonResponse.songs.map(song => camelcaseKeys(song));
-    });
-  });
-};*/
-
 Bingo.getSong = id => {
   const url = `${baseUrl}/songs/${id}`;
   return fetch(url).then(response => {
@@ -49,6 +35,7 @@ Bingo.getUser = user_id => {
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
+      //console.log('jsonResponse.user: ', jsonResponse.user);
       return camelcaseKeys(jsonResponse.user);
     });
   });
@@ -76,6 +63,7 @@ Bingo.createCard = card => {
     },
     body: JSON.stringify({card: card})
   };
+  //console.log('body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('card error');
@@ -110,5 +98,27 @@ Bingo.createTile = tile => {
     });
   });
 }
+
+Bingo.createUser = user => {
+  const url = `${baseUrl}/users`;
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user: user})
+  };
+  //console.log('body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      console.log('user error');
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      console.log('user saved');
+      return camelcaseKeys(jsonResponse.user);
+    });
+  });
+};
 
 export default Bingo;

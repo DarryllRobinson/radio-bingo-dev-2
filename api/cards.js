@@ -37,7 +37,7 @@ cardsRouter.get('/:cardId', (req, res, next) => {
 cardsRouter.post('/', (req, res, next) => {
   const numTiles = req.body.card.numTiles,
         user_id = req.body.card.user_id,
-        campaign_id = req.body.card.campaign_id
+        campaign_id = req.body.card.campaign_id,
         is_current_card = req.body.card.is_current_card === 0 ? 0 : 1;
   if (!numTiles || !user_id || !campaign_id) {
     return res.sendStatus(400);

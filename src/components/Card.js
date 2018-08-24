@@ -9,13 +9,14 @@ class Card extends Component {
 
     this.state = {
       card: {},
+      exists: false,
       tiles: null
     }
 
     this.submitArtist = this.submitArtist.bind(this);
   }
 
-  componentWillMount() {
+  /*componentWillMount() {
 
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
@@ -29,17 +30,26 @@ class Card extends Component {
     } else {
       this.setState({ profile: userProfile });
     }
-  }
+  }*/
 
   componentDidMount() {
-    const numTiles = 16;
-    const userId = 2;  // must figure out the actual user_id
-    const campaignId = 3;   // ditto here
-    const cardId = 4;   // and here
-    const exists = true; // need to integrate the user table eventually
 
-    if (!exists) {
-      this.newCard(numTiles, userId, campaignId);
+    const numTiles = 16;
+    //const userId = 2;  // must figure out the actual user_id
+    const campaignId = 2;   // ditto here
+    const cardId = 4;   // and here
+    //const exists = true; // need to integrate the user table eventually
+
+    this.setState({ profile: {} });
+    const { userProfile, getProfile } = this.props.auth;
+    if (!userProfile) {
+      getProfile((err, profile) => {
+        this.setState({ profile }, function() {
+          this.checkDB(this.state.profile.sub, campaignId, numTiles);
+        });
+      });
+    } else {
+      this.setState({ profile: userProfile });
     };
 
     Bingo.getTiles(cardId).then(response => {
@@ -54,12 +64,34 @@ class Card extends Component {
     });
   }
 
-  checkDB(id) {
-    let exists = false;
-    if (Bingo.getUser(id)) {
-      exists = true;
-    };
-    return exists;
+  checkDB(id, campaignId, numTiles) {
+    Bingo.getUser(id).then(response => {
+        Object.keys(response).map((index) => {
+          if (response[index].campaign_id === campaignId) {
+            this.setState({ exists: true }, function() {
+              return true;
+            });
+          };
+          return false;
+        });
+
+        if (!this.state.exists) {
+
+          this.newCard(numTiles, this.state.profile.sub, campaignId)
+          .then(response => {
+            console.log('profile: ', this.state.profile);
+            const user = {
+              user_id: this.state.profile.sub,
+              name: this.state.profile.nickname,
+              picture: this.state.profile.picture,
+              campaign_id: campaignId
+            };
+            Bingo.createUser(user).then(response => {
+              console.log('response: ', response);
+            });
+          });
+        };
+      });
   }
 
   newCard(numTiles, userId, campaignId) {
@@ -124,30 +156,7 @@ class Card extends Component {
       artist_3: arr[1][1].artist,
       card_id: cardId
     };
-    //console.log('tile: ', tile);
     Bingo.createTile(tile);
-  }
-
-  updateTiles(arr) {
-    //console.log('arr: ', arr);
-    return new Promise((resolve, reject) => {
-      this.setState(prevState => ({
-        tiles: [...prevState.tiles, arr]
-      }), function() {
-        console.log('State: ', this.state);
-        resolve();
-      });
-    });
-  }
-
-  fetchCard(cardId) {
-    const promise = new Promise((resolve, reject) => {
-      Bingo.getTiles(cardId).then(card => {
-        resolve(card);
-      });
-    });
-
-    return promise;
   }
 
   submitArtist(e) {
@@ -218,7 +227,7 @@ class Card extends Component {
     if (!this.state.tiles) {
       return (
         <div className="Landing">
-          Not loading
+          Please wait a moment as we build your card...
         </div>
       )
     }
