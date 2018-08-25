@@ -7,17 +7,43 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 usersRouter.param('userId', (req, res, next, userId) => {
   //const sql = 'SELECT * FROM user WHERE user.id = $userId';
   const sql = 'SELECT * FROM user WHERE user_id = $userId';
-  const values = {$userId: userId};
+  console.log('param sql: ', sql);
+  const values = {
+    $userId: userId
+  };
+  console.log('values: ', values);
   db.all(sql, values, (error, user) => {
     if (error) {
       next(error);
     } else if (user) {
+      console.log('user: ', user);
       req.user = user;
       next();
     } else {
       res.sendStatus(404);
     }
   });
+});
+
+usersRouter.param('userId', 'cardId', (req, res, next, userId, cardId) => {
+  //const sql = 'SELECT * FROM user WHERE user.id = $userId';
+  /*const sql = 'SELECT * FROM user WHERE user_id = $userId';
+  console.log('cardId param sql: ', sql);
+  const values = {
+    $userId: userId
+  };
+  console.log('values: ', values);
+  db.all(sql, values, (error, user) => {
+    if (error) {
+      next(error);
+    } else if (user) {
+      console.log('cardId user: ', user);
+      req.user = user;
+      next();
+    } else {
+      res.sendStatus(404);
+    }
+  });*/
 });
 
 usersRouter.get('/', (req, res, next) => {
@@ -98,22 +124,25 @@ usersRouter.post('/', (req, res, next) => {
   });
 });
 
-usersRouter.put('/:userId', (req, res, next) => {
+usersRouter.put('(/:userId)(/:cardId)', (req, res, next) => {
   const user_id = req.body.user.user_id,
-        name = req.body.user.name,
-        picture = req.body.user.picture,
-        isCurrentuser = req.body.user.isCurrentuser === 0 ? 0 : 1;
-  if (!user_id || !name || !picture) {
+        campaign_id = req.body.user.campaign_id,
+        card_id = req.body.user.card_id;
+  if (!user_id || !campaign_id || !card_id) {
     return res.sendStatus(400);
   }
 
-  const sql = 'UPDATE user SET user_id = $user_id, name = $name, picture = $picture, correct_0 = $correct_0, is_current_user = $isCurrentuser ' +
-      'WHERE user.id = $userId';
+  console.log('user_id: ', user_id);
+  console.log('card_id: ', card_id);
+  console.log('campaign_id: ', campaign_id);
+
+  const sql = 'UPDATE user SET card_id = $card_id' +
+      ' WHERE user_id = $user_id AND campaign_id = $campaign_id';
+      console.log('sql: ', sql);
   const values = {
     $user_id: user_id,
-    $name: name,
-    $picture: picture,
-    $isCurrentuser: isCurrentuser,
+    $card_id: card_id,
+    $campaign_id: campaign_id,
     $userId: req.params.userId
   };
 
@@ -121,7 +150,7 @@ usersRouter.put('/:userId', (req, res, next) => {
     if (error) {
       next(error);
     } else {
-      db.get(`SELECT * FROM user WHERE user.id = ${req.params.userId}`,
+      db.get(`SELECT * FROM user WHERE user_id = ${req.params.userId}`,
         (error, user) => {
           res.status(200).json({user: user});
         });

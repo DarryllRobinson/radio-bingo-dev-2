@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+//import { Link } from 'react-router-dom';
 import "../node_modules/jquery/dist/jquery.min.js";
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import './App.css';
@@ -91,6 +92,14 @@ class App extends Component {
             </div>
           </nav>
       )}
+
+      {/*<div className="User">
+        Welcome to Radio Bingo. Please select a campaign below to start playing.
+      </div>
+      <div className="Campaign">
+        <Link to="/card" className="button" campaign="4">Campaign</Link>
+      </div>*/}
+
       </div>
     );
   }

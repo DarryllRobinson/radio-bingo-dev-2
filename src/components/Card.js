@@ -23,9 +23,8 @@ class Card extends Component {
   componentDidMount() {
 
     const numTiles = 16;
-    //const userId = 2;  // must figure out the actual user_id
-    const campaignId = 2;   // ditto here
-    const cardId = 1;   // and here
+    const campaignId = 2;   // pretending the user chose campaign 2
+    const cardId = 1;   // need to create a new card
     //const exists = true; // need to integrate the user table eventually
 
     this.setState({ profile: {} });
@@ -55,27 +54,33 @@ class Card extends Component {
   checkDB(id, campaignId, numTiles) {
     Bingo.getUser(id).then(response => {
       console.log('response: ', response);
-        Object.keys(response).map((index) => {
-          if (response[index].campaign_id === campaignId) {
+        /*Object.keys(response).map((index) => {
+          if (response[index].campaign_id === campaignId
+            && response[index].card_id) {
             this.setState({ exists: true }, function() {
+              console.log('exists: ', this.state.exists);
               return true;
             });
           };
+            console.log('exists: ', this.state.exists);
           return false;
-        });
+        });*/
 
         if (!this.state.exists) {
 
           this.newCard(numTiles, this.state.profile.sub, campaignId)
-          .then(response => {
-            console.log('profile: ', this.state.profile);
+          .then(card => {
+            //console.log('profile: ', this.state.profile);
+            console.log('card: ', card);
             const user = {
-              user_id: this.state.profile.sub,
-              name: this.state.profile.nickname,
-              picture: this.state.profile.picture,
-              campaign_id: campaignId
+              userId: this.state.profile.sub,
+              //name: this.state.profile.nickname,
+              campaignId: campaignId,
+              cardId: card.id
             };
-            Bingo.createUser(user).then(response => {
+            console.log('user: ', user);
+            // must update user with new card_id
+            Bingo.updateUser(user).then(response => {
               console.log('response: ', response);
             });
           });
@@ -98,13 +103,14 @@ class Card extends Component {
 
   createCard(numTiles, userId, campaignId) {
     const promise = new Promise((resolve, reject) => {
-      const card = {
+      const cardElements = {
         numTiles: numTiles,
         user_id: userId,
         campaign_id: campaignId
       }
-      Bingo.createCard(card).then(response => {
-        resolve(response);
+      console.log('cardElements: ', cardElements);
+      Bingo.createCard(cardElements).then(card => {
+        resolve(card);
       });
     });
     return promise;
@@ -157,7 +163,7 @@ class Card extends Component {
   }
 
   handleOnChange(e) {
-    const tileId =
+    //const tileId =
     console.log('selected option', e.target.value);
     const clickTime = new Date().toLocaleString();
     //const tileId =

@@ -121,4 +121,28 @@ Bingo.createUser = user => {
   });
 };
 
+Bingo.updateUser = user => {
+  const url = `${baseUrl}/users/:(${user.userId})/:(${user.cardId})`;
+  console.log('url: ', url);
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user: user})
+  };
+
+  console.log('updateUser body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      console.log('user update error');
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      console.log('user updated');
+      return camelcaseKeys(jsonResponse.user);
+    });
+  });
+};
+
 export default Bingo;
