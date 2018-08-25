@@ -10,34 +10,22 @@ class Card extends Component {
     this.state = {
       card: {},
       exists: false,
-      tiles: null
+      tiles: null,
+      selectedArtist: '',
+      submitted: false,
+      submitted_time: '',
+      correct: ''
     }
 
     this.submitArtist = this.submitArtist.bind(this);
   }
-
-  /*componentWillMount() {
-
-    this.setState({ profile: {} });
-    const { userProfile, getProfile } = this.props.auth;
-    if (!userProfile) {
-      getProfile((err, profile) => {
-        this.setState({
-          profile,
-          loading: 'profile'
-        });
-      });
-    } else {
-      this.setState({ profile: userProfile });
-    }
-  }*/
 
   componentDidMount() {
 
     const numTiles = 16;
     //const userId = 2;  // must figure out the actual user_id
     const campaignId = 2;   // ditto here
-    const cardId = 4;   // and here
+    const cardId = 1;   // and here
     //const exists = true; // need to integrate the user table eventually
 
     this.setState({ profile: {} });
@@ -66,6 +54,7 @@ class Card extends Component {
 
   checkDB(id, campaignId, numTiles) {
     Bingo.getUser(id).then(response => {
+      console.log('response: ', response);
         Object.keys(response).map((index) => {
           if (response[index].campaign_id === campaignId) {
             this.setState({ exists: true }, function() {
@@ -162,9 +151,20 @@ class Card extends Component {
   submitArtist(e) {
     e.preventDefault();
     console.log('The link was clicked.');
-    /*console.log('myRef: ', this.myRef.value);
-    this.myRef.value = "flipper";
-    console.log('myRef: ', this.myRef.value);*/
+    console.log('artist in state: ', this.state.selectedOption);
+    console.log('clickTime in state: ', this.state.submitted_time);
+    console.log('tileId: ', );
+  }
+
+  handleOnChange(e) {
+    const tileId =
+    console.log('selected option', e.target.value);
+    const clickTime = new Date().toLocaleString();
+    //const tileId =
+    this.setState({
+      selectedOption: e.target.value,
+      submitted_time: clickTime
+      });
   }
 
   renderCards() {
@@ -180,6 +180,8 @@ class Card extends Component {
               >
                 <div ref="flipper">
                   <h3>{tile[0].song}</h3>
+                  <h3>{tile[0].card_id}</h3>
+
                   <br />
                   <button className="select">Select artist</button>
                 </div>
@@ -187,22 +189,28 @@ class Card extends Component {
                 <div>
                   <h4>
                     <input type="radio"
-                      name="artist1"
+                      name={`artists ${tile[0].id}`}
                       value={tile[0].artist_1}
+                      onChange={(e) => this.handleOnChange(e)}
+                      selected={this.state.selectedOption}
                     />
                     {tile[0].artist_1}
                     <br />
                     <br />
                     <input type="radio"
-                      name="artist2"
+                      name={`artists ${tile[0].id}`}
                       value={tile[0].artist_2}
+                      onChange={(e) => this.handleOnChange(e)}
+                      selected={this.state.selectedOption}
                     />
                     {tile[0].artist_2}
                     <br />
                     <br />
                     <input type="radio"
-                      name="artist3"
+                      name={`artists ${tile[0].id}`}
                       value={tile[0].artist_3}
+                      onChange={(e) => this.handleOnChange(e)}
+                      selected={this.state.selectedOption}
                     />
                     {tile[0].artist_3}
                     <br />

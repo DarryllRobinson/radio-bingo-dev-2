@@ -28,8 +28,11 @@ db.serialize(function() {
     '`id` INTEGER NOT NULL, ' +
     '`song` TEXT NOT NULL, ' +
     '`artist_1` TEXT NOT NULL, ' +
+    '`artist_1_selected` INTEGER NOT NULL DEFAULT 0, ' +
     '`artist_2` TEXT NOT NULL, ' +
+    '`artist_2_selected` INTEGER NOT NULL DEFAULT 0, ' +
     '`artist_3` TEXT NOT NULL, ' +
+    '`artist_3_selected` INTEGER NOT NULL DEFAULT 0, ' +
     '`submitted` INTEGER NOT NULL DEFAULT 0, ' +
     '`submitted_artist` TEXT, ' +
     '`submitted_time` TEXT, ' +
@@ -59,7 +62,7 @@ db.run('CREATE TABLE IF NOT EXISTS `Campaign` ( ' +
 
 
 
-    
+
       db.run('CREATE TABLE IF NOT EXISTS `Employee` ( ' +
                '`id` INTEGER NOT NULL, ' +
                '`name` TEXT NOT NULL, ' +
