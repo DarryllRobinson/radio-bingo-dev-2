@@ -23,7 +23,7 @@ class Card extends Component {
   componentDidMount() {
 
     const numTiles = 16;
-    const campaignId = 2;   // pretending the user chose campaign 2
+    const campaignId = 3;   // pretending the user chose campaign 2
     const cardId = 1;   // need to create a new card
     //const exists = true; // need to integrate the user table eventually
 
@@ -73,6 +73,7 @@ class Card extends Component {
             //console.log('profile: ', this.state.profile);
             console.log('card: ', card);
             const user = {
+              id: 6,
               userId: this.state.profile.sub,
               //name: this.state.profile.nickname,
               campaignId: campaignId,
@@ -80,7 +81,7 @@ class Card extends Component {
             };
             console.log('user: ', user);
             // must update user with new card_id
-            Bingo.updateUser(user).then(response => {
+            Bingo.completeUser(user).then(response => {
               console.log('response: ', response);
             });
           });

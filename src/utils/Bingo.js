@@ -121,8 +121,8 @@ Bingo.createUser = user => {
   });
 };
 
-Bingo.updateUser = user => {
-  const url = `${baseUrl}/users/:(${user.userId})/:(${user.cardId})`;
+Bingo.completeUser = user => {
+  const url = `${baseUrl}/users/${user.id}`;
   console.log('url: ', url);
   const fetchOptions = {
     method: 'PUT',
@@ -132,15 +132,29 @@ Bingo.updateUser = user => {
     body: JSON.stringify({user: user})
   };
 
-  console.log('updateUser body: ', fetchOptions.body);
+  console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('user update error');
+      console.log('response: ', response);
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
       console.log('user updated');
       return camelcaseKeys(jsonResponse.user);
+    });
+  });
+};
+
+Bingo.testUser = () => {
+  const url = `${baseUrl}/users`;
+
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      return new Promise(resolve => resolve([]));
+    }
+    return response.json().then(jsonResponse => {
+      return jsonResponse.users.map(user => camelcaseKeys(user));
     });
   });
 };
