@@ -63,7 +63,7 @@ Bingo.createCard = card => {
     },
     body: JSON.stringify({card: card})
   };
-  //console.log('body: ', fetchOptions.body);
+  console.log('body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('card error');
@@ -123,7 +123,7 @@ Bingo.createUser = user => {
 
 Bingo.completeUser = user => {
   const url = `${baseUrl}/users/${user.id}`;
-  console.log('url: ', url);
+  //console.log('url: ', url);
   const fetchOptions = {
     method: 'PUT',
     headers: {
@@ -132,11 +132,11 @@ Bingo.completeUser = user => {
     body: JSON.stringify({user: user})
   };
 
-  console.log('completeUser body: ', fetchOptions.body);
+  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('user update error');
-      console.log('response: ', response);
+      //console.log('response: ', response);
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {

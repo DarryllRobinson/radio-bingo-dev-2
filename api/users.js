@@ -5,71 +5,55 @@ const cardsRouter = express.Router({mergeParams: true});
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
-usersRouter
+usersRouter.param('userId', (req, res, next, userId) => {
+  const sql = 'SELECT * FROM user WHERE user_id = $userId';
+  const values = { $userId: userId };
 
-const express = require('express');
-const app = express();
-
-const { getElementById, getIndexById, updateElement,
-  seedElements, createElement } = require('./utils');
-
-const PORT = process.env.PORT || 4001;
-// Use static server to serve the Express Yourself Website
-app.use(express.static('public'));
-
-let animals = [];
-seedElements(animals, 'animals');
-
-const expressionsRouter = require('./expressions.js');
-
-app.use('/expressions', expressionsRouter);
-
-// Get all animals
-app.get('/animals', (req, res, next) => {
-  res.send(animals);
+  db.all(sql, values, (error, user) => {
+    if (error) {
+      next(error);
+    } else if (user) {
+      req.user = user;
+      next();
+    } else {
+      res.sendStatus(404);
+    }
+  });
 });
 
-// Get a single animal
-app.get('/animals/:id', (req, res, next) => {
-  const animal = getElementById(req.params.id, animals);
-  if (animal) {
-    res.send(animal);
-  } else {
-    res.status(404).send();
-  }
+usersRouter.get('/:userId', (req, res, next) => {
+  res.status(200).json({ user: req.user });
 });
 
-// Create an animal
-app.post('/animals', (req, res, next) => {
-  const receivedAnimal = createElement('animals', req.query);
-  if (receivedAnimal) {
-    animals.push(receivedAnimal);
-    res.status(201).send(receivedAnimal);
-  } else {
-    res.status(400).send();
-  }
-});
+usersRouter.put('/:userId', (req, res, next) => {
+  const user_id = req.body.user.userId,
+        campaign_id = req.body.user.campaignId,
+        card_id = req.body.user.cardId;
 
-// Update an animal
-app.put('/animals/:id', (req, res, next) => {
-  const animalIndex = getIndexById(req.params.id, animals);
-  if (animalIndex !== -1) {
-    updateElement(req.params.id, req.query, animals);
-    res.send(animals[animalIndex]);
-  } else {
-    res.status(404).send();
-  }
-});
+  if (!user_id || !campaign_id || !card_id) {
+    return res.sendStatus(400);
+  };
 
-// Delete a single animal
-app.delete('/animals/:id', (req, res, next) => {
-  const animalIndex = getIndexById(req.params.id, animals);
-  if (animalIndex !== -1) {
-    animals.splice(animalIndex, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send();
-  }
+  const sql = 'UPDATE user SET card_id = $card_id ' +
+    'WHERE user_id = $user_id AND campaign_id = $campaign_id';
+  const values = {
+    $user_id: user_id,
+    $campaign_id: campaign_id,
+    $card_id: card_id
+  };
+
+  db.run(sql, values, (error) => {
+    if (error) {
+      console.log('broke here');
+      next(error);
+    } else {
+      //console.log(`SELECT * FROM user WHERE user_id = '${user_id}'`);
+      db.get(`SELECT * FROM user WHERE user_id = '${user_id}'`,
+        (error, user) => {
+          res.status(200).json({ user: user });
+        });
+    }
+  });
 });
 
 module.exports = usersRouter;

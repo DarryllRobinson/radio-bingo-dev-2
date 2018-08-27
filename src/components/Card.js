@@ -23,8 +23,8 @@ class Card extends Component {
   componentDidMount() {
 
     const numTiles = 16;
-    const campaignId = 3;   // pretending the user chose campaign 2
-    const cardId = 1;   // need to create a new card
+    const campaignId = 5;   // pretending the user chose campaign 3
+    //const cardId = 3;   // need to create a new card
     //const exists = true; // need to integrate the user table eventually
 
     this.setState({ profile: {} });
@@ -32,61 +32,84 @@ class Card extends Component {
     if (!userProfile) {
       getProfile((err, profile) => {
         this.setState({ profile }, function() {
-          this.checkDB(this.state.profile.sub, campaignId, numTiles);
+          this.checkDB(this.state.profile.sub, campaignId, numTiles)
+          .then(exists => {
+            //console.log('this.state.card: ', this.state.card);
+            //console.log('return exists: ', exists);
+            if (!exists) {
+              this.newCard(numTiles, this.state.profile.sub, campaignId)
+              .then(card => {
+                //console.log('back from newCard');
+                const user = {
+                      userId: this.state.profile.sub,
+                      campaignId: campaignId,
+                      cardId: card.id
+                };
+
+                Bingo.completeUser(user).then(response => {
+                  //console.log('back from completeUser');
+                  this.setState({ card: response.cardId }, function() {
+                    //console.log('completeUser resolve');
+                    const cardId = this.state.card;
+                    Bingo.getTiles(cardId).then(response => {
+                      const card = Object.keys(response).map((index) => {
+                        const tile = [];
+                        tile.push(response[index]);
+                        return tile;
+                      });
+                      this.setState({ tiles: card });
+                    });
+                  });
+                });
+              });
+            } else {
+              const userId = this.state.profile.sub;
+              //console.log('userId: ', userId);
+              Bingo.getUser(userId).then(user => {
+                //console.log('user: ', user);
+                this.setState({ card: user[0].card_id }, function() {
+                  //console.log('this.state.card: ', this.state.card);
+                  const cardId = this.state.card;
+                  Bingo.getTiles(cardId).then(response => {
+                    const card = Object.keys(response).map((index) => {
+                      const tile = [];
+                      tile.push(response[index]);
+                      return tile;
+                    });
+                    this.setState({ tiles: card });
+                  });
+                });
+              });
+            };
+          });
         });
       });
     } else {
       this.setState({ profile: userProfile });
     };
 
-    Bingo.getTiles(cardId).then(response => {
 
-      const card = Object.keys(response).map((index) => {
-        const tile = [];
-        tile.push(response[index]);
-        return tile;
-      });
 
-      this.setState({ tiles: card });
-    });
   }
 
   checkDB(id, campaignId, numTiles) {
-    Bingo.getUser(id).then(response => {
-      console.log('response: ', response);
-        /*Object.keys(response).map((index) => {
-          if (response[index].campaign_id === campaignId
-            && response[index].card_id) {
+    const promise = new Promise((resolve, reject) => {
+      Bingo.getUser(id).then(response => {
+        Object.keys(response).map((index) => {
+          //console.log('heading into Object keys');
+          if (response[index].campaign_id === campaignId && response[index].card_id) {
             this.setState({ exists: true }, function() {
-              console.log('exists: ', this.state.exists);
+              //console.log('exists: ', this.state.exists);
               return true;
             });
           };
-            console.log('exists: ', this.state.exists);
+          //console.log('exists: ', this.state.exists);
           return false;
-        });*/
-
-        if (!this.state.exists) {
-
-          this.newCard(numTiles, this.state.profile.sub, campaignId)
-          .then(card => {
-            //console.log('profile: ', this.state.profile);
-            console.log('card: ', card);
-            const user = {
-              id: 6,
-              userId: this.state.profile.sub,
-              //name: this.state.profile.nickname,
-              campaignId: campaignId,
-              cardId: card.id
-            };
-            console.log('user: ', user);
-            // must update user with new card_id
-            Bingo.completeUser(user).then(response => {
-              console.log('response: ', response);
-            });
-          });
-        };
+        });
+        resolve(this.state.exists);
       });
+    });
+    return promise;
   }
 
   newCard(numTiles, userId, campaignId) {
@@ -109,7 +132,7 @@ class Card extends Component {
         user_id: userId,
         campaign_id: campaignId
       }
-      console.log('cardElements: ', cardElements);
+      //console.log('cardElements: ', cardElements);
       Bingo.createCard(cardElements).then(card => {
         resolve(card);
       });
