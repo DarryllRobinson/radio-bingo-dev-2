@@ -21,11 +21,23 @@ usersRouter.param('userId', (req, res, next, userId) => {
   });
 });
 
+usersRouter.get('/', (req, res, next) => {
+  db.all('SELECT * FROM user',
+    (err, users) => {
+      if (err) {
+        next(err);
+      } else {
+        res.status(200).json({users: users});
+      }
+    });
+});
+
 usersRouter.get('/:userId', (req, res, next) => {
   res.status(200).json({ user: req.user });
 });
 
 usersRouter.put('/:userId', (req, res, next) => {
+  console.log('req.body.user: ', req.body.user);
   const user_id = req.body.user.userId,
         campaign_id = req.body.user.campaignId,
         card_id = req.body.user.cardId;

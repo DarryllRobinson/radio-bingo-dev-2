@@ -146,17 +146,29 @@ Bingo.completeUser = user => {
   });
 };
 
-Bingo.testUser = () => {
-  const url = `${baseUrl}/users`;
+Bingo.submitArtist = tile => {
+  const url = `${baseUrl}/tiles/${tile.id}`;
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({tile: tile})
+  };
 
-  return fetch(url).then(response => {
+  console.log('completeUser body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
-      return new Promise(resolve => resolve([]));
+      console.log('tile update error');
+      //console.log('response: ', response);
+      return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
-      return jsonResponse.users.map(user => camelcaseKeys(user));
+      console.log('tile updated');
+      return camelcaseKeys(jsonResponse.tile);
+      //return jsonResponse.tile;
     });
   });
-};
+}
 
 export default Bingo;

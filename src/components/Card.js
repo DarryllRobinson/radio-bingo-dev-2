@@ -11,10 +11,8 @@ class Card extends Component {
       card: {},
       exists: false,
       tiles: null,
-      selectedArtist: '',
-      submitted: false,
-      submitted_time: '',
-      correct: ''
+      updatedIndex: null,
+      updatedTile: null
     }
 
     this.submitArtist = this.submitArtist.bind(this);
@@ -23,7 +21,7 @@ class Card extends Component {
   componentDidMount() {
 
     const numTiles = 16;
-    const campaignId = 5;   // pretending the user chose campaign 3
+    const campaignId = 4;   // pretending the user chose campaign ???
     //const cardId = 3;   // need to create a new card
     //const exists = true; // need to integrate the user table eventually
 
@@ -181,25 +179,58 @@ class Card extends Component {
   submitArtist(e) {
     e.preventDefault();
     console.log('The link was clicked.');
-    console.log('artist in state: ', this.state.selectedOption);
-    console.log('clickTime in state: ', this.state.submitted_time);
-    console.log('tileId: ', );
+    console.log('state: ', this.state);
+    //console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
+    const tileToSend = this.state.tiles[this.state.updatedIndex][0];
+    console.log('tileToSend: ', tileToSend);
+    const preppedTile = Object.keys(tileToSend).map((index) => {
+      const tile = [];
+      tile.push(tileToSend[index]);
+      return tile;
+    });
+    console.log('preppedTile: ', preppedTile);
+    Bingo.submitArtist(tileToSend).then(response => {
+      console.log('response: ', response);
+    });
   }
 
   handleOnChange(e) {
-    //const tileId =
-    console.log('selected option', e.target.value);
+    //console.log('value: ', e.target.value);
     const clickTime = new Date().toLocaleString();
-    //const tileId =
+    const tileId = e.target.name;
+    const value = e.target.value
+    const selection = value.slice(0, 8);
+    const artist = value.slice(8);
+    const tile = this.state.tiles;
+
+    switch (selection) {
+      case 'artist_1':
+        tile[tileId][0].artist_1_selected = true;
+        break;
+      case 'artist_2':
+        tile[tileId][0].artist_2_selected = true;
+        break;
+      case 'artist_3':
+        tile[tileId][0].artist_3_selected = true;
+        break;
+      default:
+        console.log('problem with switch');
+    }
+
+    tile[tileId][0].submitted = true;
+    tile[tileId][0].submitted_artist = artist;
+    tile[tileId][0].submitted_time = clickTime;
+
     this.setState({
-      selectedOption: e.target.value,
-      submitted_time: clickTime
-      });
+      tiles: tile,
+      updatedIndex: tileId,
+      updatedTile: tile[tileId][0].id
+    });
   }
 
   renderCards() {
     if (this.state.tiles.length > 0) {
-      return this.state.tiles.map(tile => {
+      return this.state.tiles.map((tile, index) => {
         return (
           <div
             className="item"
@@ -210,7 +241,6 @@ class Card extends Component {
               >
                 <div ref="flipper">
                   <h3>{tile[0].song}</h3>
-                  <h3>{tile[0].card_id}</h3>
 
                   <br />
                   <button className="select">Select artist</button>
@@ -219,28 +249,28 @@ class Card extends Component {
                 <div>
                   <h4>
                     <input type="radio"
-                      name={`artists ${tile[0].id}`}
-                      value={tile[0].artist_1}
+                      name={`${index}`}
+                      value={'artist_1' + tile[0].artist_1}
                       onChange={(e) => this.handleOnChange(e)}
-                      selected={this.state.selectedOption}
+                      selected={tile[0].artist_1_selected}
                     />
                     {tile[0].artist_1}
                     <br />
                     <br />
                     <input type="radio"
-                      name={`artists ${tile[0].id}`}
-                      value={tile[0].artist_2}
+                      name={`${index}`}
+                      value={'artist_2' + tile[0].artist_2}
                       onChange={(e) => this.handleOnChange(e)}
-                      selected={this.state.selectedOption}
+                      selected={tile[0].artist_2_selected}
                     />
                     {tile[0].artist_2}
                     <br />
                     <br />
                     <input type="radio"
-                      name={`artists ${tile[0].id}`}
-                      value={tile[0].artist_3}
+                      name={`${index}`}
+                      value={'artist_3' + tile[0].artist_3}
                       onChange={(e) => this.handleOnChange(e)}
-                      selected={this.state.selectedOption}
+                      selected={tile[0].artist_3_selected}
                     />
                     {tile[0].artist_3}
                     <br />

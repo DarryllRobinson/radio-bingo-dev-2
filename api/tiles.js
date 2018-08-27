@@ -76,39 +76,47 @@ tilesRouter.post('/', (req, res, next) => {
   });
 });
 
-/*tilesRouter.push('/:tileId', (req, res, next) => {
-  const artist_1 = req.body.tile.artist_1,
-        artist_2 = req.body.tile.artist_2,
-        artist_3 = req.body.tile.artist_3,
+tilesRouter.put('/:tileId', (req, res, next) => {
+  console.log('req.body.tile: ', req.body.tile);
+    console.log('req.body.tile.artist_1_selected: ', req.body.tile.artist_1_selected);
+  /*req.body.tile[0].map(el => {
+    console.log('el: ', el);
+  });*/
+  const tile_id = req.body.tile.id,
+        artist_1_selected = req.body.tile.artist_1_selected,
+        artist_2_selected = req.body.tile.artist_2_selected,
+        artist_3_selected = req.body.tile.artist_3_selected,
         submitted = req.body.tile.submitted,
         submitted_artist = req.body.tile.submitted_artist,
-        submitted_time = req.body.tile.submitted_time,
-        correct = req.body.tile.correct,
-        card_id = req.body.tile.card_id;
-  if (!song || !artist_1 || !artist_2 || !artist_3 || !card_id) {
+        submitted_time = req.body.tile.submitted_time;
+  if (!submitted || !submitted_artist || !submitted_time) {
     return res.sendStatus(400);
   }
 
-  const sql = 'INSERT INTO tile (song, artist_1, artist_2, artist_3, card_id)' +
-      'VALUES ($song, $artist_1, $artist_2,  $artist_3,  $card_id)';
+  const sql = 'UPDATE tile SET artist_1_selected = $artist_1_selected, ' +
+    'artist_2_selected = $artist_2_selected, artist_3_selected = $artist_3_selected, ' +
+    'submitted = $submitted, submitted_artist = $submitted_artist, submitted_time = $submitted_time';
   const values = {
-    $song: song,
-    $artist_1: artist_1,
-    $artist_2: artist_2,
-    $artist_3: artist_3,
-    $card_id: card_id
+    $artist_1_selected: artist_1_selected,
+    $artist_2_selected: artist_2_selected,
+    $artist_3_selected: artist_3_selected,
+    $submitted: submitted,
+    $submitted_artist: submitted_artist,
+    $submitted_time: submitted_time
   };
 
   db.run(sql, values, function(error) {
     if (error) {
+      console.log('broke');
       next(error);
     } else {
-      db.get(`SELECT * FROM tile WHERE tile.id = ${this.lastID}`,
+      console.log(`${tile_id}`);
+      db.get(`SELECT * FROM tile WHERE tile.id = ${tile_id}`,
         (error, tile) => {
           res.status(201).json({tile: tile});
         });
     }
   });
-});*/
+});
 
 module.exports = tilesRouter;
