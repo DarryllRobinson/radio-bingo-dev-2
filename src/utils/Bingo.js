@@ -156,7 +156,7 @@ Bingo.submitArtist = tile => {
     body: JSON.stringify({tile: tile})
   };
 
-  console.log('completeUser body: ', fetchOptions.body);
+  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('tile update error');

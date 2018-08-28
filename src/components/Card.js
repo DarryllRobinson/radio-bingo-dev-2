@@ -181,20 +181,20 @@ class Card extends Component {
     if (this.state.updatedIndex) {
       //console.log('The link was clicked.');
       //console.log('state: ', this.state);
-      console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
+      //console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
       const tileToSend = this.state.tiles[this.state.updatedIndex][0];
-      console.log('tileToSend: ', tileToSend);
-      const preppedTile = Object.keys(tileToSend).map((index) => {
+      //console.log('tileToSend: ', tileToSend);
+      /*const preppedTile = Object.keys(tileToSend).map((index) => {
         const tile = [];
         tile.push(tileToSend[index]);
-        console.log('tile[]: ', tile);
+        //console.log('tile[]: ', tile);
         return tile;
-      });
-      console.log('preppedTile: ', preppedTile);
-      console.log('state before submit: ', this.state.tiles);
+      });*/
+      //console.log('preppedTile: ', preppedTile);
+      //console.log('state before submit: ', this.state.tiles);
       Bingo.submitArtist(tileToSend).then(response => {
-        console.log('response: ', response);
-        console.log('state after submit: ', this.state.tiles);
+        //console.log('response: ', response);
+        //console.log('state after submit: ', this.state.tiles);
       });
     };
   }

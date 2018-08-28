@@ -77,9 +77,9 @@ tilesRouter.post('/', (req, res, next) => {
 });
 
 tilesRouter.put('/:tileId', (req, res, next) => {
-  console.log('req.body.tile: ', req.body.tile);
+  /*console.log('req.body.tile: ', req.body.tile);
     console.log('req.body.tile.artist_1_selected: ', req.body.tile.artist_1_selected);
-  /*req.body.tile[0].map(el => {
+  req.body.tile[0].map(el => {
     console.log('el: ', el);
   });*/
   const tile_id = req.body.tile.id,
@@ -109,10 +109,10 @@ tilesRouter.put('/:tileId', (req, res, next) => {
 
   db.run(sql, values, function(error) {
     if (error) {
-      console.log('broke');
+      //console.log('broke');
       next(error);
     } else {
-      console.log(`${tile_id}`);
+      //console.log(`${tile_id}`);
       db.get(`SELECT * FROM tile WHERE tile.id = ${tile_id}`,
         (error, tile) => {
           res.status(201).json({tile: tile});

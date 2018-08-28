@@ -1,1 +1,1 @@
-update tile set artist_1_selected = null, submitted = 0, submitted_artist = null, submitted_time = null where card_id = 182
+update tile set artist_1_selected = null, artist_2_selected = null, artist_3_selected = null, submitted = 0, submitted_artist = null, submitted_time = null where card_id = 182
