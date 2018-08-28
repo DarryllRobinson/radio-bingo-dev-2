@@ -76,7 +76,8 @@ tilesRouter.post('/', (req, res, next) => {
   });
 });
 
-tilesRouter.put('/:tileId', (req, res, next) => {
+tilesRouter.put('/:tileId/artist', (req, res, next) => {
+  //console.log('/:tileId/artist');
   /*console.log('req.body.tile: ', req.body.tile);
     console.log('req.body.tile.artist_1_selected: ', req.body.tile.artist_1_selected);
   req.body.tile[0].map(el => {
@@ -105,6 +106,40 @@ tilesRouter.put('/:tileId', (req, res, next) => {
     $submitted: submitted,
     $submitted_artist: submitted_artist,
     $submitted_time: submitted_time
+  };
+
+  db.run(sql, values, function(error) {
+    if (error) {
+      //console.log('broke');
+      next(error);
+    } else {
+      //console.log(`${tile_id}`);
+      db.get(`SELECT * FROM tile WHERE tile.id = ${tile_id}`,
+        (error, tile) => {
+          res.status(201).json({tile: tile});
+        });
+    }
+  });
+});
+
+tilesRouter.put('/:tileId/correct', (req, res, next) => {
+  //console.log('/:tileId/correct');
+  /*console.log('req.body.tile: ', req.body.tile);
+    console.log('req.body.tile.artist_1_selected: ', req.body.tile.artist_1_selected);
+  req.body.tile[0].map(el => {
+    console.log('el: ', el);
+  });*/
+  const tile_id = req.body.tile.id
+        correct = req.body.tile.correct;
+  if (!tile_id || !correct) {
+    return res.sendStatus(400);
+  }
+
+  const sql = 'UPDATE tile SET correct = $correct ' +
+    'WHERE id = $tile_id';
+  const values = {
+    $tile_id: tile_id,
+    $correct: correct
   };
 
   db.run(sql, values, function(error) {

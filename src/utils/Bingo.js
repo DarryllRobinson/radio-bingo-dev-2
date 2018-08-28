@@ -162,7 +162,7 @@ Bingo.completeUser = user => {
 };
 
 Bingo.submitArtist = tile => {
-  const url = `${baseUrl}/tiles/${tile.id}`;
+  const url = `${baseUrl}/tiles/${tile.id}/artist`;
   const fetchOptions = {
     method: 'PUT',
     headers: {
@@ -179,7 +179,32 @@ Bingo.submitArtist = tile => {
       return new Promise(resolve => resolve(null));
     }
     return response.json().then(jsonResponse => {
-      console.log('tile updated');
+      console.log('tile artist updated');
+      return camelcaseKeys(jsonResponse.tile);
+      //return jsonResponse.tile;
+    });
+  });
+}
+
+Bingo.correctArtist = tile => {
+  const url = `${baseUrl}/tiles/${tile.id}/correct`;
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({tile: tile})
+  };
+
+  //console.log('completeUser body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      console.log('tile update error');
+      //console.log('response: ', response);
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      console.log('tile correct artist updated');
       return camelcaseKeys(jsonResponse.tile);
       //return jsonResponse.tile;
     });

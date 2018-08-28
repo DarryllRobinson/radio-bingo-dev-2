@@ -9,7 +9,8 @@ class Card extends Component {
 
     this.state = {
       card: {},
-      campaignId: 4,      // must update to actual campaign chosen
+      campaignId: 3,      // must update to actual campaign chosen
+      completed: 0,
       exists: false,
       tiles: null,
       updatedIndex: null,
@@ -23,8 +24,6 @@ class Card extends Component {
 
     const numTiles = 16;
     const campaignId = this.state.campaignId;
-    //const cardId = 3;   // need to create a new card
-    //const exists = true; // need to integrate the user table eventually
 
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
@@ -33,12 +32,9 @@ class Card extends Component {
         this.setState({ profile }, function() {
           this.checkDB(this.state.profile.sub, campaignId, numTiles)
           .then(exists => {
-            //console.log('this.state.card: ', this.state.card);
-            //console.log('return exists: ', exists);
             if (!exists) {
               this.newCard(numTiles, this.state.profile.sub, campaignId)
               .then(card => {
-                //console.log('back from newCard');
                 const user = {
                       userId: this.state.profile.sub,
                       campaignId: campaignId,
@@ -46,9 +42,7 @@ class Card extends Component {
                 };
 
                 Bingo.completeUser(user).then(response => {
-                  //console.log('back from completeUser');
                   this.setState({ card: response.cardId }, function() {
-                    //console.log('completeUser resolve');
                     const cardId = this.state.card;
                     Bingo.getTiles(cardId).then(response => {
                       const card = Object.keys(response).map((index) => {
@@ -63,21 +57,23 @@ class Card extends Component {
               });
             } else {
               const userId = this.state.profile.sub;
-              //console.log('userId: ', userId);
               Bingo.getUser(userId).then(user => {
-                //console.log('user: ', user);
-                this.setState({ card: user[0].card_id }, function() {
-                  //console.log('this.state.card: ', this.state.card);
-                  const cardId = this.state.card;
-                  Bingo.getTiles(cardId).then(response => {
-                    const card = Object.keys(response).map((index) => {
-                      const tile = [];
-                      tile.push(response[index]);
-                      return tile;
+                for (const index in user) {
+                  if (user[index].campaign_id === campaignId) {
+                    this.setState({ card: user[index].card_id }, function() {
+                      const cardId = this.state.card;
+                      Bingo.getTiles(cardId).then(response => {
+                        const card = Object.keys(response).map((index) => {
+                          const tile = [];
+                          tile.push(response[index]);
+                          return tile;
+                        });
+                        this.setState({ tiles: card });
+                      });
                     });
-                    this.setState({ tiles: card });
-                  });
-                });
+                    return true;
+                  }
+                }
               });
             };
           });
@@ -180,19 +176,7 @@ class Card extends Component {
   submitArtist(e) {
     e.preventDefault();
     if (this.state.updatedIndex) {
-      //console.log('The link was clicked.');
-      //console.log('state: ', this.state);
-      //console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
       const tileToSend = this.state.tiles[this.state.updatedIndex][0];
-      //console.log('tileToSend: ', tileToSend);
-      /*const preppedTile = Object.keys(tileToSend).map((index) => {
-        const tile = [];
-        tile.push(tileToSend[index]);
-        //console.log('tile[]: ', tile);
-        return tile;
-      });*/
-      //console.log('preppedTile: ', preppedTile);
-      //console.log('state before submit: ', this.state.tiles);
       Bingo.submitArtist(tileToSend).then(response => {
         const submission = {
           artist: response.submittedArtist,
@@ -201,12 +185,28 @@ class Card extends Component {
           song: response.song,
           time: response.submittedTime
         };
-        //console.log('submission: ', submission);
-        this.checkSong(submission).then(response => {
-          console.log('response: ', response);
-
+        this.checkSong(submission).then(correct => {
+          console.log('correct: ', correct);
+          if (correct === true) {
+            console.log('submission.tileId: ', submission.tileId);
+            const update = {
+              id: submission.tileId,
+              correct: 1
+            }
+            Bingo.correctArtist(update).then(response => {
+              console.log('response: ', response);
+              const completed = this.state.completed + 1;
+              const newTiles = this.state.tiles;
+              this.setState({
+                completed: completed,
+                tiles: newTiles
+              }, function() {
+                console.log('did it work?');
+                window.location.reload();
+              });
+            });
+          }
         });
-        //console.log('state after submit: ', this.state.tiles);
       });
     };
   }
@@ -246,21 +246,16 @@ class Card extends Component {
 
   checkSong(submission) {
     const promise = new Promise((resolve, reject) => {
-      //console.log('checkSong submission: ', submission);
       Bingo.getSong(submission.campaignId).then(result => {
-        //console.log('result: ', result);
         Object.keys(result).map((index) => {
           if (result[index].song === submission.song) {
             // checking time
             if (result[index].start_time < submission.time
               && submission.time < result[index].end_time) {
-              //console.log('result[index].start_time: ', result[index].start_time);
-              //console.log('result[index].end_time: ', result[index].end_time);
-              //console.log('submission.time: ', submission.time);
               // checking artist
               if (result[index].artist === submission.artist) {
                 //console.log('artist matches');
-                resolve('Correct');
+                resolve(true);
                 return true;
               } else {
                 resolve('Not the correct artist');
@@ -270,20 +265,12 @@ class Card extends Component {
             resolve('Song was not playing at the time you submitted');
             return false;
           } else {
-            //console.log('does not match');
             resolve('Song was not playing');
             return false;
 
           }
         });
       });
-    });
-    return promise;
-  }
-
-  checkArtist() {
-    const promise = new Promise((resolve, reject) => {
-
     });
     return promise;
   }
@@ -430,6 +417,7 @@ class Card extends Component {
     return (
       <div className="Landing">
         <h2>{profile.nickname + String.fromCharCode(39)}s Radio Bingo Board</h2>
+        <h2>You have {this.state.completed} tiles completed</h2>
 
         <div className="tileCard">
 
