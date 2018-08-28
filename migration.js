@@ -39,6 +39,7 @@ db.serialize(function() {
     '`submitted_artist` TEXT, ' +
     '`submitted_time` TEXT, ' +
     '`correct` INTEGER DEFAULT 0, ' +
+    '`message` TEXT, ' +
     '`card_id` INTEGER NOT NULL, ' +
     'PRIMARY KEY(`id`), ' +
     'FOREIGN KEY(`card_id`) REFERENCES `Card`(`id`) )');

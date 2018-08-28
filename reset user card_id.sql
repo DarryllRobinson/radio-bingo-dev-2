@@ -1,0 +1,1 @@
+update user set card_id = null

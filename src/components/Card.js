@@ -246,7 +246,7 @@ class Card extends Component {
 
   checkSong(submission) {
     const promise = new Promise((resolve, reject) => {
-      Bingo.getSong(submission.campaignId).then(result => {
+      Bingo.matchSong(submission.campaignId).then(result => {
         Object.keys(result).map((index) => {
           if (result[index].song === submission.song) {
             // checking time
