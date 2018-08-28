@@ -178,24 +178,25 @@ class Card extends Component {
 
   submitArtist(e) {
     e.preventDefault();
-    console.log('The link was clicked.');
-    console.log('state: ', this.state);
-    //console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
-    const tileToSend = this.state.tiles[this.state.updatedIndex][0];
-    console.log('tileToSend: ', tileToSend);
-    const preppedTile = Object.keys(tileToSend).map((index) => {
-      const tile = [];
-      tile.push(tileToSend[index]);
-      return tile;
-    });
-    console.log('preppedTile: ', preppedTile);
-    Bingo.submitArtist(tileToSend).then(response => {
-      console.log('response: ', response);
-    });
+    if (this.state.updatedIndex) {
+      //console.log('The link was clicked.');
+      //console.log('state: ', this.state);
+      console.log('tile to be updated: ', this.state.tiles[this.state.updatedIndex]);
+      const tileToSend = this.state.tiles[this.state.updatedIndex][0];
+      console.log('tileToSend: ', tileToSend);
+      const preppedTile = Object.keys(tileToSend).map((index) => {
+        const tile = [];
+        tile.push(tileToSend[index]);
+        return tile;
+      });
+      console.log('preppedTile: ', preppedTile);
+      Bingo.submitArtist(tileToSend).then(response => {
+        console.log('response: ', response);
+      });
+    };
   }
 
   handleOnChange(e) {
-    //console.log('value: ', e.target.value);
     const clickTime = new Date().toLocaleString();
     const tileId = e.target.name;
     const value = e.target.value
@@ -231,61 +232,120 @@ class Card extends Component {
   renderCards() {
     if (this.state.tiles.length > 0) {
       return this.state.tiles.map((tile, index) => {
-        return (
-          <div
-            className="item"
-            key={tile[0].id}>
-              <FlexyFlipCard
-                  frontBackgroundColor="#000034"
-                  backBackgroundColor="#000034"
-              >
-                <div ref="flipper">
-                  <h3>{tile[0].song}</h3>
+        if (tile[0].correct === 0) {
+          return (
+            <div
+              className="item"
+              key={tile[0].id}>
+                <FlexyFlipCard
+                    frontBackgroundColor="#000034"
+                    backBackgroundColor="#000034"
+                >
+                  <div ref="flipper">
+                    <h3>{tile[0].song}</h3>
 
-                  <br />
-                  <button className="select">Select artist</button>
-                </div>
+                    <br />
+                    <button className="select">Select artist</button>
+                  </div>
 
-                <div>
-                  <h4>
-                    <input type="radio"
-                      name={`${index}`}
-                      value={'artist_1' + tile[0].artist_1}
-                      onChange={(e) => this.handleOnChange(e)}
-                      selected={tile[0].artist_1_selected}
-                    />
-                    {tile[0].artist_1}
+                  <div>
+                    <h4>
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_1' + tile[0].artist_1}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_1_selected}
+                      />
+                      {tile[0].artist_1}
+                      <br />
+                      <br />
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_2' + tile[0].artist_2}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_2_selected}
+                      />
+                      {tile[0].artist_2}
+                      <br />
+                      <br />
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_3' + tile[0].artist_3}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_3_selected}
+                      />
+                      {tile[0].artist_3}
+                      <br />
+                      <br />
+                      <div ref="flipper">
+                        <button className="select"
+                          onClick={this.submitArtist}>
+                          Save artist
+                        </button>
+                      </div>
+                    </h4>
+                  </div>
+                </FlexyFlipCard>
+            </div>
+          );
+        } else if (tile[0].correct === 1) {
+          return (
+            <div
+              className="item"
+              key={tile[0].id}>
+                <FlexyFlipCard
+                    frontBackgroundColor="#000034"
+                    backBackgroundColor="#000034"
+                >
+                  <div ref="flipper">
+                    <h3>{tile[0].song}</h3>
+                    <h3>Correct!</h3>
+
                     <br />
-                    <br />
-                    <input type="radio"
-                      name={`${index}`}
-                      value={'artist_2' + tile[0].artist_2}
-                      onChange={(e) => this.handleOnChange(e)}
-                      selected={tile[0].artist_2_selected}
-                    />
-                    {tile[0].artist_2}
-                    <br />
-                    <br />
-                    <input type="radio"
-                      name={`${index}`}
-                      value={'artist_3' + tile[0].artist_3}
-                      onChange={(e) => this.handleOnChange(e)}
-                      selected={tile[0].artist_3_selected}
-                    />
-                    {tile[0].artist_3}
-                    <br />
-                    <br />
-                    <div ref="flipper">
-                      <button className="select"
-                        onClick={this.submitArtist}>
-                        Save artist
-                      </button>
-                    </div>
-                  </h4>
-                </div>
-              </FlexyFlipCard>
-          </div>
-        );
+                    <button className="select">Select artist</button>
+                  </div>
+
+                  <div>
+                    <h4>
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_1' + tile[0].artist_1}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_1_selected}
+                      />
+                      {tile[0].artist_1}
+                      <br />
+                      <br />
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_2' + tile[0].artist_2}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_2_selected}
+                      />
+                      {tile[0].artist_2}
+                      <br />
+                      <br />
+                      <input type="radio"
+                        name={`${index}`}
+                        value={'artist_3' + tile[0].artist_3}
+                        onChange={(e) => this.handleOnChange(e)}
+                        selected={tile[0].artist_3_selected}
+                      />
+                      {tile[0].artist_3}
+                      <br />
+                      <br />
+                      <div ref="flipper">
+                        <button className="select"
+                          onClick={this.submitArtist}>
+                          Save artist
+                        </button>
+                      </div>
+                    </h4>
+                  </div>
+                </FlexyFlipCard>
+            </div>
+          );
+        }
       });
     }
   }
