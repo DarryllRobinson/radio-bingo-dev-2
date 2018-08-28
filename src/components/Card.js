@@ -10,7 +10,7 @@ class Card extends Component {
     this.state = {
       card: {},
       campaignId: 3,      // must update to actual campaign chosen
-      completed: 0,
+      completed: 0,       // must update from db for each reload
       exists: false,
       tiles: null,
       updatedIndex: null,

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 //import { Link } from 'react-router-dom';
+import Bingo from './utils/Bingo';
 import "../node_modules/jquery/dist/jquery.min.js";
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import './App.css';
@@ -16,6 +17,11 @@ class App extends Component {
 
   logout() {
     this.props.auth.logout();
+  }
+
+  reset() {
+    console.log('reset');
+    //Bingo.resetCard();
   }
 
   render() {
@@ -54,6 +60,16 @@ class App extends Component {
                     style={{ cursor: "pointer" }}
                   >
                     Card
+                  <span  className="sr-only">
+                  </span>
+                  </a>
+                </li>
+                <li  className="nav-item active">
+                  <a  className="nav-link"
+                    onClick={this.reset.bind(this)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    Reset Card
                   <span  className="sr-only">
                   </span>
                   </a>
