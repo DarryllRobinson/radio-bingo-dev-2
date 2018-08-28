@@ -302,7 +302,7 @@ class Card extends Component {
                     <h3>Correct!</h3>
 
                     <br />
-                    <button className="select">Select artist</button>
+                    <button className="select">Check submitted artist</button>
                   </div>
 
                   <div>
@@ -337,12 +337,19 @@ class Card extends Component {
                       <div ref="flipper">
                         <button className="select"
                           onClick={this.submitArtist}>
-                          Save artist
+                          Back
                         </button>
                       </div>
                     </h4>
                   </div>
                 </FlexyFlipCard>
+            </div>
+          );
+        } else {
+          return(
+            <div  className="item"
+              key={tile[0].id}>
+              <h4>Error in rendering tiles</h4>
             </div>
           );
         }
