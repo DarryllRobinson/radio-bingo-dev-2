@@ -201,11 +201,11 @@ class Card extends Component {
           song: response.song,
           time: response.submittedTime
         };
-        console.log('submission: ', submission);
-        /*checkSong(submission).then(response => {
+        //console.log('submission: ', submission);
+        this.checkSong(submission).then(response => {
           console.log('response: ', response);
 
-        });*/
+        });
         //console.log('state after submit: ', this.state.tiles);
       });
     };
@@ -246,8 +246,36 @@ class Card extends Component {
 
   checkSong(submission) {
     const promise = new Promise((resolve, reject) => {
-      Bingo.checkSong(submission).then(result => {
-        console.log('result: ', result);
+      //console.log('checkSong submission: ', submission);
+      Bingo.getSong(submission.campaignId).then(result => {
+        //console.log('result: ', result);
+        Object.keys(result).map((index) => {
+          if (result[index].song === submission.song) {
+            // checking time
+            if (result[index].start_time < submission.time
+              && submission.time < result[index].end_time) {
+              //console.log('result[index].start_time: ', result[index].start_time);
+              //console.log('result[index].end_time: ', result[index].end_time);
+              //console.log('submission.time: ', submission.time);
+              // checking artist
+              if (result[index].artist === submission.artist) {
+                //console.log('artist matches');
+                resolve('Correct');
+                return true;
+              } else {
+                resolve('Not the correct artist');
+                return false;
+              }
+            }
+            resolve('Song was not playing at the time you submitted');
+            return false;
+          } else {
+            //console.log('does not match');
+            resolve('Song was not playing');
+            return false;
+
+          }
+        });
       });
     });
     return promise;

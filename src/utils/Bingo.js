@@ -54,6 +54,21 @@ Bingo.getTiles = cardId => {
   });
 };
 
+Bingo.getSong = (campaignId) => {
+  const url = `${baseUrl}/rds/${campaignId}`;
+  //console.log('url: ', url);
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      console.log('getSong error');
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      //console.log('getSong successful');
+      return camelcaseKeys(jsonResponse.rds);
+    });
+  });
+};
+
 Bingo.createCard = card => {
   const url = `${baseUrl}/cards`;
   const fetchOptions = {

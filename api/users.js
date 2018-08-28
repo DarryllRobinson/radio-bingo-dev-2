@@ -37,7 +37,7 @@ usersRouter.get('/:userId', (req, res, next) => {
 });
 
 usersRouter.put('/:userId', (req, res, next) => {
-  console.log('req.body.user: ', req.body.user);
+  //console.log('req.body.user: ', req.body.user);
   const user_id = req.body.user.userId,
         campaign_id = req.body.user.campaignId,
         card_id = req.body.user.cardId;
