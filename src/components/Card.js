@@ -187,11 +187,14 @@ class Card extends Component {
       const preppedTile = Object.keys(tileToSend).map((index) => {
         const tile = [];
         tile.push(tileToSend[index]);
+        console.log('tile[]: ', tile);
         return tile;
       });
       console.log('preppedTile: ', preppedTile);
+      console.log('state before submit: ', this.state.tiles);
       Bingo.submitArtist(tileToSend).then(response => {
         console.log('response: ', response);
+        console.log('state after submit: ', this.state.tiles);
       });
     };
   }

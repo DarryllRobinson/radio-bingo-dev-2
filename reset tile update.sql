@@ -1,0 +1,1 @@
+update tile set artist_1_selected = null, submitted = 0, submitted_artist = null, submitted_time = null where card_id = 182

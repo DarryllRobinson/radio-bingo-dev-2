@@ -95,8 +95,10 @@ tilesRouter.put('/:tileId', (req, res, next) => {
 
   const sql = 'UPDATE tile SET artist_1_selected = $artist_1_selected, ' +
     'artist_2_selected = $artist_2_selected, artist_3_selected = $artist_3_selected, ' +
-    'submitted = $submitted, submitted_artist = $submitted_artist, submitted_time = $submitted_time';
+    'submitted = $submitted, submitted_artist = $submitted_artist, submitted_time = $submitted_time ' +
+    'WHERE id = $tile_id';
   const values = {
+    $tile_id: tile_id,
     $artist_1_selected: artist_1_selected,
     $artist_2_selected: artist_2_selected,
     $artist_3_selected: artist_3_selected,
