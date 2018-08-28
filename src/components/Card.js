@@ -9,6 +9,7 @@ class Card extends Component {
 
     this.state = {
       card: {},
+      campaignId: 4,      // must update to actual campaign chosen
       exists: false,
       tiles: null,
       updatedIndex: null,
@@ -21,7 +22,7 @@ class Card extends Component {
   componentDidMount() {
 
     const numTiles = 16;
-    const campaignId = 4;   // pretending the user chose campaign ???
+    const campaignId = this.state.campaignId;
     //const cardId = 3;   // need to create a new card
     //const exists = true; // need to integrate the user table eventually
 
@@ -193,7 +194,18 @@ class Card extends Component {
       //console.log('preppedTile: ', preppedTile);
       //console.log('state before submit: ', this.state.tiles);
       Bingo.submitArtist(tileToSend).then(response => {
-        //console.log('response: ', response);
+        const submission = {
+          artist: response.submittedArtist,
+          campaignId: this.state.campaignId,
+          tileId: response.id,
+          song: response.song,
+          time: response.submittedTime
+        };
+        console.log('submission: ', submission);
+        /*checkSong(submission).then(response => {
+          console.log('response: ', response);
+
+        });*/
         //console.log('state after submit: ', this.state.tiles);
       });
     };
@@ -230,6 +242,22 @@ class Card extends Component {
       updatedIndex: tileId,
       updatedTile: tile[tileId][0].id
     });
+  }
+
+  checkSong(submission) {
+    const promise = new Promise((resolve, reject) => {
+      Bingo.checkSong(submission).then(result => {
+        console.log('result: ', result);
+      });
+    });
+    return promise;
+  }
+
+  checkArtist() {
+    const promise = new Promise((resolve, reject) => {
+
+    });
+    return promise;
   }
 
   renderCards() {

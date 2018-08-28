@@ -52,13 +52,23 @@ db.serialize(function() {
     'PRIMARY KEY(`id`), ' +
     'FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) )');
 
-db.run('CREATE TABLE IF NOT EXISTS `Campaign` ( ' +
-    '`id` INTEGER NOT NULL, ' +
-    '`campaign_name` TEXT NOT NULL, ' +
-    '`organisation` TEXT NOT NULL, ' +
-    '`start_date` TEXT NOT NULL, ' +
-    '`end_date` TEXT NOT NULL, ' +
-    '`num_contestants` INTEGER NOT NULL DEFAULT 0, ' +
-    '`is_current_campaign` INTEGER NOT NULL DEFAULT 1, ' +
-    'PRIMARY KEY(`id`) )');
+  db.run('CREATE TABLE IF NOT EXISTS `Campaign` ( ' +
+      '`id` INTEGER NOT NULL, ' +
+      '`campaign_name` TEXT NOT NULL, ' +
+      '`organisation` TEXT NOT NULL, ' +
+      '`start_date` TEXT NOT NULL, ' +
+      '`end_date` TEXT NOT NULL, ' +
+      '`num_contestants` INTEGER NOT NULL DEFAULT 0, ' +
+      '`is_current_campaign` INTEGER NOT NULL DEFAULT 1, ' +
+      'PRIMARY KEY(`id`) )');
+
+  db.run('CREATE TABLE IF NOT EXISTS `RDS` ( ' +
+      '`id` INTEGER NOT NULL, ' +
+      '`song` TEXT NOT NULL, ' +
+      '`artist` TEXT NOT NULL, ' +
+      '`start_time` TEXT NOT NULL, ' +
+      '`end_time` TEXT NOT NULL, ' +
+      '`campaign_id` INTEGER NOT NULL, ' +
+      'PRIMARY KEY(`id`), ' +
+      'FOREIGN KEY(`campaign_id`) REFERENCES `Campaign`(`id`) )');
 });
