@@ -11,6 +11,7 @@ class Card extends Component {
       card: {},
       campaignId: 3,      // must update to actual campaign chosen
       completed: 0,       // must update from db for each reload
+      except: [],
       exists: false,
       tiles: null,
       updatedIndex: null,
@@ -18,6 +19,7 @@ class Card extends Component {
     }
 
     this.submitArtist = this.submitArtist.bind(this);
+    this.genRandomNum = this.genRandomNum.bind(this);
   }
 
   componentDidMount() {
@@ -288,6 +290,47 @@ class Card extends Component {
     return promise;
   }
 
+  //genRandomNum(max, min, except) {
+  genRandomNum() {
+    const min = 1;
+    const max = 3;
+    const except = this.state.except;
+    let num = Math.floor(Math.random() * (max - min + 1)) + min;
+    //console.log('this.state.except.length: ', this.state.except.length);
+    let len = this.state.except.length;
+    console.log('len: ', len);
+    console.log('len < max; ', len < max);
+    if (len < max) {
+      console.log('1 num: ', num);
+      console.log('except: ', except);
+      except.map((value) => {
+        console.log('value: ', value);
+        if (value === num) {
+          console.log('need another number');
+          return value;
+        } else {
+          let newExcept = [];
+          newExcept = this.state.except;
+          newExcept.push(num);
+          console.log('newExcept: ', newExcept);
+          this.setState({ except: newExcept }, function() {
+            console.log('updated except: ', this.state.except);
+          });
+          return num;
+        }
+      });
+
+
+    } else {
+      console.log('too full');
+      const clear = [];
+      this.setState({ except: clear }, function() {
+        console.log('better: ', this.state.except);
+      })
+    }
+    return num;
+  }
+
   renderCards() {
     if (this.state.tiles.length > 0) {
       return this.state.tiles.map((tile, index) => {
@@ -303,6 +346,11 @@ class Card extends Component {
                   <div ref="flipper">
                     <h3>{tile[0].song}</h3>
                     <h3>{tile[0].message}</h3>
+
+                    <button className="select"
+                      onClick={this.genRandomNum}>
+                      genRandomNum
+                    </button>
 
                     <br />
                     <button className="select">Select artist</button>
