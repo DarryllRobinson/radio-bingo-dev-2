@@ -186,7 +186,7 @@ Bingo.submitArtist = tile => {
   });
 }
 
-Bingo.correctArtist = tile => {
+Bingo.correctSubmission = tile => {
   const url = `${baseUrl}/tiles/${tile.id}/correct`;
   const fetchOptions = {
     method: 'PUT',
@@ -205,6 +205,31 @@ Bingo.correctArtist = tile => {
     }
     return response.json().then(jsonResponse => {
       console.log('tile correct artist updated');
+      return camelcaseKeys(jsonResponse.tile);
+      //return jsonResponse.tile;
+    });
+  });
+}
+
+Bingo.wrongSubmission = tile => {
+  const url = `${baseUrl}/tiles/${tile.id}/wrong`;
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({tile: tile})
+  };
+
+  //console.log('completeUser body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      console.log('tile wrong update error');
+      //console.log('response: ', response);
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      console.log('tile wrong updated');
       return camelcaseKeys(jsonResponse.tile);
       //return jsonResponse.tile;
     });

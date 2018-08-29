@@ -182,15 +182,15 @@ class Card extends Component {
           song: response.song,
           time: response.submittedTime
         };
-        this.checkSong(submission).then(correct => {
-          console.log('correct: ', correct);
-          if (correct === true) {
+        this.checkSong(submission).then(result => {
+          console.log('result: ', result);
+          if (result === true) {
             console.log('submission.tileId: ', submission.tileId);
             const update = {
               id: submission.tileId,
               correct: 1
             }
-            Bingo.correctArtist(update).then(response => {
+            Bingo.correctSubmission(update).then(response => {
               console.log('response: ', response);
               const completed = this.state.completed + 1;
               const newTiles = this.state.tiles;
@@ -198,7 +198,23 @@ class Card extends Component {
                 completed: completed,
                 tiles: newTiles
               }, function() {
-                console.log('did it work?');
+                //console.log('did it work?');
+                window.location.reload();
+              });
+            });
+          } else {
+            console.log('submission.tileId: ', submission.tileId);
+            const update = {
+              id: submission.tileId,
+              message: result
+            }
+            Bingo.wrongSubmission(update).then(response => {
+              console.log('response: ', response);
+              const newTiles = this.state.tiles;
+              this.setState({
+                tiles: newTiles
+              }, function() {
+                //console.log('did it work?');
                 window.location.reload();
               });
             });
@@ -286,6 +302,7 @@ class Card extends Component {
                 >
                   <div ref="flipper">
                     <h3>{tile[0].song}</h3>
+                    <h3>{tile[0].message}</h3>
 
                     <br />
                     <button className="select">Select artist</button>

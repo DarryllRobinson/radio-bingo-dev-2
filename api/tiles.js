@@ -156,6 +156,40 @@ tilesRouter.put('/:tileId/correct', (req, res, next) => {
   });
 });
 
+tilesRouter.put('/:tileId/wrong', (req, res, next) => {
+  //console.log('/:tileId/correct');
+  /*console.log('req.body.tile: ', req.body.tile);
+    console.log('req.body.tile.artist_1_selected: ', req.body.tile.artist_1_selected);
+  req.body.tile[0].map(el => {
+    console.log('el: ', el);
+  });*/
+  const tile_id = req.body.tile.id
+        message = req.body.tile.message;
+  if (!tile_id || !message) {
+    return res.sendStatus(400);
+  }
+
+  const sql = 'UPDATE tile SET message = $message ' +
+    'WHERE id = $tile_id';
+  const values = {
+    $tile_id: tile_id,
+    $message: message
+  };
+
+  db.run(sql, values, function(error) {
+    if (error) {
+      //console.log('broke');
+      next(error);
+    } else {
+      //console.log(`${tile_id}`);
+      db.get(`SELECT * FROM tile WHERE tile.id = ${tile_id}`,
+        (error, tile) => {
+          res.status(201).json({tile: tile});
+        });
+    }
+  });
+});
+
 tilesRouter.put('/reset', (req, res, next) => {
   //console.log('req.body.user: ', req.body.user);
   /*const user_id = req.body.user.userId;
