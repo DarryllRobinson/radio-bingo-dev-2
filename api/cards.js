@@ -64,4 +64,28 @@ cardsRouter.post('/', (req, res, next) => {
   });
 });
 
+cardsRouter.put('/reset', (req, res, next) => {
+  //console.log('req.body.user: ', req.body.user);
+  /*const user_id = req.body.user.userId;
+
+  if (!user_id) {
+    return res.sendStatus(400);
+  };*/
+
+  const sql = 'DELETE FROM card';
+
+  db.run(sql, (error) => {
+    if (error) {
+      console.log('broke here');
+      next(error);
+    } else {
+      //console.log(`SELECT * FROM user WHERE user_id = '${user_id}'`);
+      db.get(`SELECT * FROM card'`,
+        (error, card) => {
+          res.status(200).json({ card: card });
+        });
+    }
+  });
+});
+
 module.exports = cardsRouter;

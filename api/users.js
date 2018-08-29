@@ -68,4 +68,32 @@ usersRouter.put('/:userId', (req, res, next) => {
   });
 });
 
+usersRouter.put('/:userId/reset', (req, res, next) => {
+  //console.log('req.body.user: ', req.body.user);
+  const user_id = req.body.user.userId;
+
+  if (!user_id) {
+    return res.sendStatus(400);
+  };
+
+  const sql = 'UPDATE user SET card_id = null ' +
+    'WHERE user_id = $user_id';
+  const values = {
+    $user_id: user_id
+  };
+
+  db.run(sql, values, (error) => {
+    if (error) {
+      console.log('broke here');
+      next(error);
+    } else {
+      //console.log(`SELECT * FROM user WHERE user_id = '${user_id}'`);
+      db.get(`SELECT * FROM user WHERE user_id = '${user_id}'`,
+        (error, user) => {
+          res.status(200).json({ user: user });
+        });
+    }
+  });
+});
+
 module.exports = usersRouter;

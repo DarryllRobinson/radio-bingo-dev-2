@@ -82,9 +82,6 @@ class Card extends Component {
     } else {
       this.setState({ profile: userProfile });
     };
-
-
-
   }
 
   checkDB(id, campaignId, numTiles) {

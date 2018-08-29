@@ -211,4 +211,45 @@ Bingo.correctArtist = tile => {
   });
 }
 
+Bingo.resetUser = user => {
+  const url = `${baseUrl}/users/${user.id}/reset`;
+  //console.log('url: ', url);
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({user: user})
+  };
+
+  //console.log('completeUser body: ', fetchOptions.body);
+  return fetch(url, fetchOptions).then(response => {
+    if (!response.ok) {
+      console.log('user reset error');
+      //console.log('response: ', response);
+      return new Promise(resolve => resolve(null));
+    }
+    return response.json().then(jsonResponse => {
+      console.log('user reset');
+      return camelcaseKeys(jsonResponse.user);
+    });
+  });
+};
+
+Bingo.resetCard = card => {
+  const url = `${baseUrl}/cards/reset`;
+  const fetchOptions = {
+    method: 'DELETE'
+  };
+  return fetch(url, fetchOptions);
+};
+
+Bingo.resetTile = tile => {
+  const url = `${baseUrl}/tiles/reset`;
+  const fetchOptions = {
+    method: 'DELETE'
+  };
+  return fetch(url, fetchOptions);
+};
+
 export default Bingo;

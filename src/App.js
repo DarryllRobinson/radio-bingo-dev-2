@@ -21,8 +21,23 @@ class App extends Component {
 
   reset() {
     console.log('reset');
-    //Bingo.resetCard();
+    console.log('profile: ', this.state.profile);
+    Bingo.resetUser(this.state.profile.sub);
+    Bingo.resetCard();
+    Bingo.resetTile();
   }
+
+  /*componentDidMount() {
+    this.setState({ profile: {} });
+    const { userProfile, getProfile } = this.props.auth;
+    if (!userProfile) {
+      getProfile((err, profile) => {
+        this.setState({ profile });
+      });
+    } else {
+      this.setState({ profile: userProfile });
+    };
+  }*/
 
   render() {
     const { isAuthenticated } = this.props.auth;
