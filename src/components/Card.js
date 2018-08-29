@@ -296,37 +296,51 @@ class Card extends Component {
     const max = 3;
     const except = this.state.except;
     let num = Math.floor(Math.random() * (max - min + 1)) + min;
-    //console.log('this.state.except.length: ', this.state.except.length);
+    console.log('num: ', num);
     let len = this.state.except.length;
+
     console.log('len: ', len);
     console.log('len < max; ', len < max);
-    if (len < max) {
-      console.log('1 num: ', num);
-      console.log('except: ', except);
-      except.map((value) => {
-        console.log('value: ', value);
-        if (value === num) {
-          console.log('need another number');
-          return value;
-        } else {
-          let newExcept = [];
-          newExcept = this.state.except;
-          newExcept.push(num);
-          console.log('newExcept: ', newExcept);
-          this.setState({ except: newExcept }, function() {
-            console.log('updated except: ', this.state.except);
-          });
-          return num;
+
+    if (len === 0) {
+      console.log('len === 0');
+      except.push(num);
+      this.setState({ except: except }, function() {
+        console.log('new state except: ', this.state.except);
+      })
+    } else if (len < max) {
+      // check if num is in [except]
+      const found = except.find(number => {
+        if (num === number) {
+          console.log(`${num} === ${number}`);
+          return false;
         }
+        console.log(`${num} !== ${number}`);
+        return true;
       });
 
+      console.log('second found: ', found);
 
+      if (found) {
+        console.log('found: ', found);
+      } else {
+        console.log('not found');
+        const arr = [];
+        arr.push(num);
+        this.setState(prevState => ({
+          tiles: [...prevState.tiles, arr]
+        }), function() {
+          console.log('State: ', this.state.except);
+        });
+      }
+
+      //return this.genRandomNum();
     } else {
-      console.log('too full');
-      const clear = [];
+      console.log('too big');
+      let clear =[];
       this.setState({ except: clear }, function() {
-        console.log('better: ', this.state.except);
-      })
+        console.log('cleared except: ', this.state.except);
+      });
     }
     return num;
   }
