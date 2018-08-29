@@ -54,7 +54,7 @@ Bingo.getTiles = cardId => {
   });
 };
 
-Bingo.getSong = (campaignId) => {
+Bingo.matchSong = campaignId => {
   const url = `${baseUrl}/rds/${campaignId}`;
   //console.log('url: ', url);
   return fetch(url).then(response => {
