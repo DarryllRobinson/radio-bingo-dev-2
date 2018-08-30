@@ -316,39 +316,28 @@ class Card extends Component {
       let len = this.state.except.length;
       // Checking the array isn't full already - clear and send error msg if it is
       if (len === max) {
-        //console.log('(len === max): ', len === max);
         const clear = [];
         this.setState({ except: clear });
         random = 'error';
       } else if (len === 0) {
-        //console.log('(len === 0): ', (len === 0));
         let newExcept = this.state.except;
         newExcept.push(random);
         this.setState({ except: newExcept });
         count++;
         len = this.state.except.length;
       } else if (len < max) {
-        //console.log('(len < max): ', (len < max));
         // Checking if num has already been chosen
-        //console.log('except before findInArray: ', this.state.except);
         let found = this.findInArray(except, random);
-        //console.log('found: ', found);
         if (!found) {
-          //console.log('not found');
           let newExcept = this.state.except;
           newExcept.push(random);
           this.setState({ except: newExcept });
           count++;
           len = this.state.except.length;
         }
-
       }
-      //console.log('random: ', random);
-      //console.log('count: ', count);
       num = random;
-      //count++;
     } while (count < max);
-    //console.log('final except: ', this.state.except);
     const returnArray = this.state.except;
     const clear = [];
     this.setState({ except: clear }, function() {
@@ -358,106 +347,63 @@ class Card extends Component {
   }
 
   genRandomSong(min, max) {
-    let count = 0;
     let num = 0;
 
-    //do {
       let except = this.state.exceptSongs;
       let random = Math.floor(Math.random() * (max - min + 1)) + min;
       let len = this.state.exceptSongs.length;
       // Checking the array isn't full already - clear and send error msg if it is
       if (len === max) {
-        //console.log('(len === max): ', len === max);
         const clear = [];
         this.setState({ exceptSongs: clear });
         random = 'error';
       } else if (len === 0) {
-        //console.log('(len === 0): ', (len === 0));
         let newExcept = this.state.exceptSongs;
         newExcept.push(random);
         this.setState({ exceptSongs: newExcept });
-        count++;
         len = this.state.exceptSongs.length;
       } else if (len < max) {
-        //console.log('(len < max): ', (len < max));
         // Checking if num has already been chosen
-        //console.log('except before findInArray: ', this.state.except);
         let found = this.findInArray(except, random);
-        //console.log('found: ', found);
         if (!found) {
-          //console.log('not found');
           let newExcept = this.state.exceptSongs;
           newExcept.push(random);
           this.setState({ exceptSongs: newExcept });
-          count++;
           len = this.state.exceptSongs.length;
         }
 
       }
-      //console.log('random: ', random);
-      //console.log('count: ', count);
       num = random;
-      //count++;
-    //} while (count < max);
-    //console.log('final except: ', this.state.except);
-    /*const returnArray = this.state.except;
-    const clear = [];
-    this.setState({ except: clear }, function() {
-      return num;
-    });
-    return returnArray;*/
     return num;
   }
 
   genRandomArtist(min, max) {
-    let count = 0;
     let num = 0;
 
-    //do {
-      let except = this.state.exceptArtists;
-      let random = Math.floor(Math.random() * (max - min + 1)) + min;
-      let len = this.state.exceptArtists.length;
-      // Checking the array isn't full already - clear and send error msg if it is
-      if (len === max) {
-        //console.log('(len === max): ', len === max);
-        const clear = [];
-        this.setState({ exceptArtists: clear });
-        random = 'error';
-      } else if (len === 0) {
-        //console.log('(len === 0): ', (len === 0));
+    let except = this.state.exceptArtists;
+    let random = Math.floor(Math.random() * (max - min + 1)) + min;
+    let len = this.state.exceptArtists.length;
+    // Checking the array isn't full already - clear and send error msg if it is
+    if (len === max) {
+      const clear = [];
+      this.setState({ exceptArtists: clear });
+      random = 'error';
+    } else if (len === 0) {
+      let newExcept = this.state.exceptArtists;
+      newExcept.push(random);
+      this.setState({ exceptArtists: newExcept });
+      len = this.state.exceptArtists.length;
+    } else if (len < max) {
+      // Checking if num has already been chosen
+      let found = this.findInArray(except, random);
+      if (!found) {
         let newExcept = this.state.exceptArtists;
         newExcept.push(random);
         this.setState({ exceptArtists: newExcept });
-        count++;
         len = this.state.exceptArtists.length;
-      } else if (len < max) {
-        //console.log('(len < max): ', (len < max));
-        // Checking if num has already been chosen
-        //console.log('except before findInArray: ', this.state.except);
-        let found = this.findInArray(except, random);
-        //console.log('found: ', found);
-        if (!found) {
-          //console.log('not found');
-          let newExcept = this.state.exceptArtists;
-          newExcept.push(random);
-          this.setState({ exceptArtists: newExcept });
-          count++;
-          len = this.state.exceptArtists.length;
-        }
-
       }
-      //console.log('random: ', random);
-      //console.log('count: ', count);
-      num = random;
-      //count++;
-    //} while (count < max);
-    //console.log('final except: ', this.state.except);
-    /*const returnArray = this.state.except;
-    const clear = [];
-    this.setState({ except: clear }, function() {
-      return num;
-    });
-    return returnArray;*/
+    }
+    num = random;
     return num;
   }
 
