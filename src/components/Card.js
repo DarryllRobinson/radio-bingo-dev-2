@@ -162,13 +162,26 @@ class Card extends Component {
   }
 
   prepTiles(arr, cardId) {
+    let numbers = this.genRandomNum(1, 3);
+    let tileElements = [
+      { artist: arr[0].artist, value: numbers[0] },
+      { artist: arr[1][0].artist, value: numbers[1] },
+      { artist: arr[1][1].artist, value: numbers[2] }
+    ];
+
+    const orderedTiles = [...tileElements];
+    orderedTiles.sort((a,b) => {
+      return a.value > b.value;
+    });
+
     const tile = {
       song: arr[0].name,
-      artist_1: arr[0].artist,
-      artist_2: arr[1][0].artist,
-      artist_3: arr[1][1].artist,
+      artist_1: orderedTiles[0].artist,
+      artist_2: orderedTiles[1].artist,
+      artist_3: orderedTiles[2].artist,
       card_id: cardId
     };
+
     Bingo.createTile(tile);
   }
 
@@ -290,10 +303,7 @@ class Card extends Component {
     return promise;
   }
 
-  //genRandomNum(max, min, except) {
-  genRandomNum() {
-    const min = 1;
-    const max = 5;
+  genRandomNum(min, max) {
     let count = 0;
     let num = 0;
 
@@ -303,25 +313,25 @@ class Card extends Component {
       let len = this.state.except.length;
       // Checking the array isn't full already - clear and send error msg if it is
       if (len === max) {
-        console.log('(len === max): ', len === max);
+        //console.log('(len === max): ', len === max);
         const clear = [];
         this.setState({ except: clear });
         random = 'error';
       } else if (len === 0) {
-        console.log('(len === 0): ', (len === 0));
+        //console.log('(len === 0): ', (len === 0));
         let newExcept = this.state.except;
         newExcept.push(random);
         this.setState({ except: newExcept });
         count++;
         len = this.state.except.length;
       } else if (len < max) {
-        console.log('(len < max): ', (len < max));
+        //console.log('(len < max): ', (len < max));
         // Checking if num has already been chosen
-        console.log('except before findInArray: ', this.state.except);
+        //console.log('except before findInArray: ', this.state.except);
         let found = this.findInArray(except, random);
-        console.log('found: ', found);
+        //console.log('found: ', found);
         if (!found) {
-          console.log('not found');
+          //console.log('not found');
           let newExcept = this.state.except;
           newExcept.push(random);
           this.setState({ except: newExcept });
@@ -330,23 +340,22 @@ class Card extends Component {
         }
 
       }
-      console.log('random: ', random);
-      console.log('count: ', count);
+      //console.log('random: ', random);
+      //console.log('count: ', count);
       num = random;
       //count++;
     } while (count < max);
-    console.log('final except: ', this.state.except);
+    //console.log('final except: ', this.state.except);
+    const returnArray = this.state.except;
     const clear = [];
     this.setState({ except: clear }, function() {
       return num;
     });
+    return returnArray;
   }
 
   findInArray(arr, el) {
-    console.log('arr: ', arr);
-    console.log('el: ', el);
     let match = arr.find(random => {
-      console.log('findInArray random: ', random);
       return random === el;
     });
     return match;
@@ -367,11 +376,6 @@ class Card extends Component {
                   <div ref="flipper">
                     <h3>{tile[0].song}</h3>
                     <h3>{tile[0].message}</h3>
-
-                    <button className="select"
-                      onClick={this.genRandomNum}>
-                      genRandomNum
-                    </button>
 
                     <br />
                     <button className="select">Select artist</button>
