@@ -293,56 +293,63 @@ class Card extends Component {
   //genRandomNum(max, min, except) {
   genRandomNum() {
     const min = 1;
-    const max = 3;
-    const except = this.state.except;
-    let num = Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log('num: ', num);
-    let len = this.state.except.length;
+    const max = 5;
+    let count = 0;
+    let num = 0;
 
-    console.log('len: ', len);
-    console.log('len < max; ', len < max);
-
-    if (len === 0) {
-      console.log('len === 0');
-      except.push(num);
-      this.setState({ except: except }, function() {
-        console.log('new state except: ', this.state.except);
-      })
-    } else if (len < max) {
-      // check if num is in [except]
-      const found = except.find(number => {
-        if (num === number) {
-          console.log(`${num} === ${number}`);
-          return false;
-        }
-        console.log(`${num} !== ${number}`);
-        return true;
-      });
-
-      console.log('second found: ', found);
-
-      if (found) {
+    do {
+      let except = this.state.except;
+      let random = Math.floor(Math.random() * (max - min + 1)) + min;
+      let len = this.state.except.length;
+      // Checking the array isn't full already - clear and send error msg if it is
+      if (len === max) {
+        console.log('(len === max): ', len === max);
+        const clear = [];
+        this.setState({ except: clear });
+        random = 'error';
+      } else if (len === 0) {
+        console.log('(len === 0): ', (len === 0));
+        let newExcept = this.state.except;
+        newExcept.push(random);
+        this.setState({ except: newExcept });
+        count++;
+        len = this.state.except.length;
+      } else if (len < max) {
+        console.log('(len < max): ', (len < max));
+        // Checking if num has already been chosen
+        console.log('except before findInArray: ', this.state.except);
+        let found = this.findInArray(except, random);
         console.log('found: ', found);
-      } else {
-        console.log('not found');
-        const arr = [];
-        arr.push(num);
-        this.setState(prevState => ({
-          tiles: [...prevState.tiles, arr]
-        }), function() {
-          console.log('State: ', this.state.except);
-        });
-      }
+        if (!found) {
+          console.log('not found');
+          let newExcept = this.state.except;
+          newExcept.push(random);
+          this.setState({ except: newExcept });
+          count++;
+          len = this.state.except.length;
+        }
 
-      //return this.genRandomNum();
-    } else {
-      console.log('too big');
-      let clear =[];
-      this.setState({ except: clear }, function() {
-        console.log('cleared except: ', this.state.except);
-      });
-    }
-    return num;
+      }
+      console.log('random: ', random);
+      console.log('count: ', count);
+      num = random;
+      //count++;
+    } while (count < max);
+    console.log('final except: ', this.state.except);
+    const clear = [];
+    this.setState({ except: clear }, function() {
+      return num;
+    });
+  }
+
+  findInArray(arr, el) {
+    console.log('arr: ', arr);
+    console.log('el: ', el);
+    let match = arr.find(random => {
+      console.log('findInArray random: ', random);
+      return random === el;
+    });
+    return match;
   }
 
   renderCards() {
