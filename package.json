@@ -19,7 +19,7 @@
     "popper.js": "^1.14.4",
     "prop-types": "^15.6.2",
     "react": "^16.4.2",
-    "react-bootstrap": "^0.32.1",
+    "react-bootstrap": "^0.32.3",
     "react-data-fetching": "^0.2.2",
     "react-dom": "^16.4.2",
     "react-router-dom": "^4.3.1",

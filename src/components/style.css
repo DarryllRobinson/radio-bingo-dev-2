@@ -72,9 +72,8 @@ a {
   color: #000034;
 }
 
-{/* width: 627px;   // landscape mobile size */}
 .tileCard {
-  width: 850px;
+  width: 627px;
   border: 2px solid gray;
   padding: 5px;
   margin: 5px;
@@ -146,7 +145,7 @@ input[type="radio"] {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  width: 185px;
+  width: 140px;
   min-height: 157px;
   border: 2px solid #2f2f2f;
   margin-left: .5rem;
@@ -156,11 +155,11 @@ input[type="radio"] {
   word-break: break-word;
   font-size: 1.125rem;
   transition: .25s;
-  padding: 2px;
+  padding: 0;
   background-color: #000034;
 }
 
-.saveArtist {
+.Radio {
   font-size: 1rem;
   font-weight: 350;
   color: white;

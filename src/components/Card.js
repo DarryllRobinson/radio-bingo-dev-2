@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import './style.css';
 import { FlexyFlipCard } from 'flexy-flipcards';
+import { Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Bingo from '../utils/Bingo';
+import './style.css';
 
 class Card extends Component {
   constructor(props) {
@@ -415,6 +416,11 @@ class Card extends Component {
   }
 
   renderCards() {
+    const tooltip = (
+      <Tooltip id="tooltip">
+        <strong>Select the artist singing the current song</strong>
+      </Tooltip>
+    )
     if (this.state.tiles.length > 0) {
       return this.state.tiles.map((tile, index) => {
         if (tile[0].correct === 0) {
@@ -427,49 +433,52 @@ class Card extends Component {
                     backBackgroundColor="#000034"
                 >
                   <div ref="flipper">
-                    <h3>{tile[0].song}</h3>
-                    <h3>{tile[0].message}</h3>
-
-                    <br />
-                    <button className="select">Select artist</button>
+                    <h3 className="page-header"
+                      style={{marginTop: 46}}>
+                      {tile[0].song}
+                    </h3>
+                    <Button className="btn btn-primary"
+                      style={{fontSize: 15}}>
+                      Song is playing!
+                    </Button>
+                    <h2
+                      style={{marginTop: 46}}>{tile[0].message}</h2>
                   </div>
 
-                  <div>
-                    <h4>
-                      <input type="radio"
+                  <div className="RadioGroup"
+                  style={{fontSize: 13, color: "white", textAlign: "left", padding: 3}}>
+                    <Radio
                         name={`${index}`}
                         value={'artist_1' + tile[0].artist_1}
                         onChange={(e) => this.handleOnChange(e)}
                         selected={tile[0].artist_1_selected}
-                      />
+                      >
                       {tile[0].artist_1}
-                      <br />
-                      <br />
-                      <input type="radio"
-                        name={`${index}`}
+                      </Radio>
+                      <Radio name={`${index}`}
                         value={'artist_2' + tile[0].artist_2}
                         onChange={(e) => this.handleOnChange(e)}
                         selected={tile[0].artist_2_selected}
-                      />
+                      >
                       {tile[0].artist_2}
-                      <br />
-                      <br />
-                      <input type="radio"
-                        name={`${index}`}
+                      </Radio>
+                      <Radio name={`${index}`}
                         value={'artist_3' + tile[0].artist_3}
                         onChange={(e) => this.handleOnChange(e)}
                         selected={tile[0].artist_3_selected}
-                      />
+                      >
                       {tile[0].artist_3}
-                      <br />
-                      <br />
-                      <div ref="flipper">
-                        <button className="select"
+                      </Radio>
+                      <div ref="flipper" style={{alignItems: "center"}}>
+                      <OverlayTrigger placement="right" overlay={tooltip}>
+
+
+                      <Button className="btn btn-primary"
                           onClick={this.submitArtist}>
-                          Save artist
-                        </button>
+                          Submit artist
+                        </Button>
+                        </OverlayTrigger>
                       </div>
-                    </h4>
                   </div>
                 </FlexyFlipCard>
             </div>
@@ -559,7 +568,7 @@ class Card extends Component {
         <h2>{profile.nickname + String.fromCharCode(39)}s Radio Bingo Board</h2>
         <h2>You have {this.state.completed} tiles completed</h2>
 
-        <div className="tileCard">
+        <div className="col-xs-5 col-sm-12 col-md-9">
 
           <div className="item-list">
             {this.renderCards()}
