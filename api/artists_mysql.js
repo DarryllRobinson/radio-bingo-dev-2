@@ -4,12 +4,13 @@ const artists_mysqlRouter = express.Router();
 const mysql = require('mysql');
 const connection = mysql.createConnection( {
   host: 'localhost',
-  user: 'radioBingo',
-  password: 'Der5rdcfdk!',
+  user: 'root',
+  password: 'password',
   database: 'radio_bingo'
 });
 
 artists_mysqlRouter.param('artistId', (req, res, next, artistId) => {
+  console.log('here');
   const sql = 'SELECT * FROM artist WHERE artist.id = $artistId';
   const values = {$artistId: artistId};
   db.get(sql, values, (error, artist) => {
