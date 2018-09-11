@@ -9,6 +9,14 @@ const connection = mysql.createConnection( {
   database: 'radio_bingo'
 });
 
+connection.connect(function(err) {
+  if (!err) {
+    console.log('SUCCESS!!!');
+  } else {
+    console.log('Error - bloody Secret lied to me');
+  }
+});
+
 artists_mysqlRouter.param('artistId', (req, res, next, artistId) => {
   console.log('here');
   const sql = 'SELECT * FROM artist WHERE artist.id = $artistId';
