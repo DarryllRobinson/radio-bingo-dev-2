@@ -3,6 +3,22 @@ const cors = require('cors');
 const errorhandler = require('errorhandler');
 const express = require('express');
 
+const mysql = require('mysql');
+const connection = mysql.createConnection( {
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'mydb'
+});
+
+connection.connect(function(err) {
+  if (!err) {
+    console.log('SUCCESS!!!');
+  } else {
+    console.log('Error - bloody Secret lied to me: ', err);
+  }
+});
+
 const apiRouter = require('./api/api');
 
 const app = express();
