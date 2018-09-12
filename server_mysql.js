@@ -8,7 +8,7 @@ const connection = mysql.createConnection( {
   host: 'localhost',
   user: 'root',
   password: 'password',
-  database: 'mydb'
+  database: 'radio_bingo'
 });
 
 connection.connect(function(err) {
