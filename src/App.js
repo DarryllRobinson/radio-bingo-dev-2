@@ -42,10 +42,30 @@ class App extends Component {
 
   listCampaigns() {
     Bingo.getCampaigns().then(response => {
-      this.setState({ campaigns: response }, function() {
+      const list = Object.keys(response).map((index) => {
+        const campaign = [];
+        campaign.push(response[index].campaign_name);
+        return campaign;
+      });
+      this.setState({ campaigns: list }, function() {
         console.log('campaigns: ', this.state.campaigns);
       });
     });
+  }
+
+  renderList() {
+    if (this.state.campaigns.length > 0) {
+      return this.state.campaigns.map((campaign, index) => {
+        return (
+          <Col smOffset={2} sm={10} key={campaign[0].id}>
+            <Radio name="campaign">
+              {campaign[index]}
+            </Radio>
+            {' '}
+          </Col>
+        )
+      })
+    }
   }
 
   render() {
@@ -160,33 +180,10 @@ class App extends Component {
                   </Col>
                 </FormGroup>
 
-                {/*}<FormGroup controlId="frmPassword">
-                  <Col componentClass={ControlLabel} sm={2}>
-                    Password
-                  </Col>
-                  <Col sm={10}>
-                    <FormControl type="password" placeholder="Password" />
-                  </Col>
+                <FormGroup controlId="frmCampaigns">
+                  {this.renderList()}
+                  {/*console.log(this.state.campaigns)*/}
                 </FormGroup>
-
-                <FormGroup controlId="frmFile">
-                  <Col componentClass={ControlLabel} sm={2}>
-                    Upload a new profile pic
-                  </Col>
-                  <Col sm={10}>
-                    <FormControl type="file" />
-                  </Col>
-                </FormGroup>*/}
-
-                //if (this.state.campaigns.length > 0) {
-                   Object.keys(this.state.campaigns).map((index) => {
-                    <FormGroup>
-                      <Col smOffset={2} sm={10}>
-                        <Radio name="campaign">{this.state.campaigns[index].campaign_name}</Radio>{' '}
-                      </Col>
-                    </FormGroup>
-                  })
-                //}
 
                 <FormGroup>
                   <Col smOffset={2} sm={10}>
