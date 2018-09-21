@@ -1,0 +1,185 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 300;
+  color: #fff;
+}
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.App header {
+  padding: .75rem 0;
+  border-bottom: solid 1px #979797;
+  background-color: #001f3f;
+  text-align: center;
+  font-weight: 600;
+}
+
+{/* brings everything on the Landing page to the centre */}
+.Card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 4rem;
+  padding-bottom: 8rem;
+  background-color: black;
+}
+
+{/* styles the lists a bit */}
+.Card .item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+{/* now the magic starts happening - the tile items appear and are separated */}
+.Card .item {
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 120px;
+  min-height: 157px;
+  border: 2px solid #2f2f2f;
+  margin-left: .5rem;
+  margin-right: .5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  word-break: break-word;
+  font-size: 1.125rem;
+  transition: .25s;
+  padding: 2px;
+  background-color: #000034;
+}
+
+{/* styles the h2 elements */}
+.Card h2 {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: #000034;
+}
+
+.tileCard {
+  width: 627px;
+  border: 2px solid gray;
+  padding: 5px;
+  margin: 5px;
+}
+
+.select {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 350;
+  letter-spacing: 0.3px;
+  text-align: center;;
+  word-break: break-word;
+  color: f3f3f3;
+}
+
+{/* brings everything on the Landing page to the centre */}
+.Landing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 4rem;
+  padding-bottom: 8rem;
+  background-color: #f3f3f3;
+}
+
+{/* styles the h2 elements */}
+.Landing h2 {
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: #7e5a61;
+}
+
+.Landing h3 {
+  margin: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: white;
+}
+
+.Landing h4 {
+  margin: 1rem;
+  font-size: 0.725rem;
+  letter-spacing: 0.3px;
+  text-align: left;
+  word-break: break-word;
+  color: red;
+}
+
+input[type="radio"] {
+  margin: 0 10px 0 0;
+}
+
+{/* styles the lists a bit */}
+.Landing .item-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 0.2rem;
+}
+
+{/* now the magic starts happening - the tile items appear and are separated */}
+.Landing .item {
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 140px;
+  min-height: 157px;
+  border: 2px solid #2f2f2f;
+  margin-left: .5rem;
+  margin-right: .5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  word-break: break-word;
+  font-size: 1.125rem;
+  transition: .25s;
+  padding: 0;
+  background-color: #000034;
+}
+
+.Radio {
+  font-size: 1rem;
+  font-weight: 350;
+  color: white;
+}
+
+{/* now the magic starts happening - the tile items appear and are separated */}
+.xxxLanding .item {
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 157px;
+  min-height: 157px;
+  padding: 1rem;
+  border: 2px solid #2f2f2f;
+  margin-left: .5rem;
+  margin-right: .5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  word-break: break-word;
+  font-size: 1.125rem;
+  transition: .25s;
+  background-color: #000034;
+}

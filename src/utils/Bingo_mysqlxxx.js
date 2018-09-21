@@ -1,8 +1,9 @@
 import camelcaseKeys from './camelcase-keys/index';
 import 'whatwg-fetch';
+//const db = require('./dbconnection');
 
 const Bingo = {};
-const baseUrl = 'http://localhost:4000/api';
+const baseUrl = 'http://localhost:3306/api';
 
 Bingo.getSong = id => {
   const url = `${baseUrl}/songs/${id}`;
@@ -50,19 +51,6 @@ Bingo.getTiles = cardId => {
     }
     return response.json().then(jsonResponse => {
       return camelcaseKeys(jsonResponse.tile);
-    });
-  });
-};
-
-Bingo.getCampaigns = () => {
-  const url = `${baseUrl}/campaigns`;
-  console.log('url: ', url);
-  return fetch(url).then(response => {
-    if (!response.ok) {
-      return new Promise(resolve => resolve(null));
-    }
-    return response.json().then(jsonResponse => {
-      return camelcaseKeys(jsonResponse.campaigns);
     });
   });
 };

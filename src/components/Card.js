@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { FlexyFlipCard } from 'flexy-flipcards';
 import { Button, Radio, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Bingo from '../utils/Bingo';
-import './style.css';
+import './style947.css';
 
 class Card extends Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class Card extends Component {
 
     this.state = {
       card: {},
-      campaignId: 3,      // must update to actual campaign chosen
+      campaignId: 2,      // must update to actual campaign chosen
       completed: 0,       // must update from db for each reload
       except: [],
       exceptArtists: [],
@@ -27,7 +27,7 @@ class Card extends Component {
 
   componentDidMount() {
 
-    const numTiles = 16;
+    const numTiles = 2;
     const campaignId = this.state.campaignId;
 
     this.setState({ profile: {} });
@@ -553,8 +553,9 @@ class Card extends Component {
   }
 
   render() {
+    const { isAuthenticated } = this.props.auth;
 
-    if (!this.state.tiles) {
+    if (!this.state.tiles && isAuthenticated) {
       return (
         <div className="Landing">
           Please wait a moment as we build your card...
@@ -564,18 +565,24 @@ class Card extends Component {
 
     const { profile } = this.state;
     return (
-      <div className="Landing">
-        <h2>{profile.nickname + String.fromCharCode(39)}s Radio Bingo Board</h2>
-        <h2>You have {this.state.completed} tiles completed</h2>
+      <div>
+        {
+          isAuthenticated() && (
+            <div className="Landing">
+              <h2>{profile.nickname + String.fromCharCode(39)}s Radio Bingo Board</h2>
+              <h2>You have {this.state.completed} tiles completed</h2>
 
-        <div className="col-xs-5 col-sm-12 col-md-9">
+              <div className="col-xs-5 col-sm-12 col-md-9">
 
-          <div className="item-list">
-            {this.renderCards()}
-          </div>
+                <div className="item-list">
+                  {this.renderCards()}
+                </div>
 
-        </div>
+              </div>
 
+            </div>
+          )
+        }
       </div>
     )
   }
