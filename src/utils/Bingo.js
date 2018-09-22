@@ -159,7 +159,6 @@ Bingo.completeUser = user => {
     body: JSON.stringify({user: user})
   };
 
-  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('user update error');
@@ -183,7 +182,6 @@ Bingo.submitArtist = tile => {
     body: JSON.stringify({tile: tile})
   };
 
-  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('tile update error');
@@ -208,7 +206,6 @@ Bingo.correctSubmission = tile => {
     body: JSON.stringify({tile: tile})
   };
 
-  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('tile update error');
@@ -233,7 +230,6 @@ Bingo.wrongSubmission = tile => {
     body: JSON.stringify({tile: tile})
   };
 
-  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('tile wrong update error');
@@ -259,7 +255,6 @@ Bingo.resetUser = user => {
     body: JSON.stringify({user: user})
   };
 
-  //console.log('completeUser body: ', fetchOptions.body);
   return fetch(url, fetchOptions).then(response => {
     if (!response.ok) {
       console.log('user reset error');

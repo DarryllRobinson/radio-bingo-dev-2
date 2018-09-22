@@ -13,10 +13,21 @@ db.serialize(function() {
     '`artist` TEXT NOT NULL, ' +
     'PRIMARY KEY(`id`) )');
 
+  db.run('CREATE TABLE IF NOT EXISTS `UserCampaign` ( ' +
+    '`id` INTEGER NOT NULL, ' +
+    '`campaign_id` INTEGER, ' +
+    '`user_id` INTEGER, ' +
+    'PRIMARY KEY(`id`), ' +
+    'FOREIGN KEY(`campaign_id`) REFERENCES `Campaign`(`id`), ' +
+    'FOREIGN KEY(`user_id`) REFERENCES `User`(`id`) )');
+
   db.run('CREATE TABLE IF NOT EXISTS `User` ( ' +
     '`id` INTEGER NOT NULL, ' +
     '`user_id` TEXT NOT NULL, ' +
-    '`name` TEXT NOT NULL, ' +
+    '`firstName` TEXT NOT NULL, ' +
+    '`surname` TEXT NOT NULL, ' +
+    '`email` TEXT NOT NULL, ' +
+    '`cell` TEXT NOT NULL, ' +
     '`picture` TEXT NOT NULL, ' +
     '`campaign_id` INTEGER, ' +
     '`campaign` TEXT, ' +

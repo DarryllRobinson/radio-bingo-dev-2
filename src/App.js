@@ -11,10 +11,16 @@ class App extends Component {
     super(props);
 
     this.state = {
-      campaigns: {}
+      campaigns: {},
+      firstName: '',
+      surname: '',
+      email: '',
+      cell: '',
+      picture: ''
     };
 
     this.updateProfile = this.updateProfile.bind(this);
+    this.handleOnChange = this.handleOnChange.bind(this);
   }
 
   componentWillMount() {
@@ -23,7 +29,9 @@ class App extends Component {
     const { userProfile, getProfile } = this.props.auth;
     if (!userProfile) {
       getProfile((err, profile) => {
-        this.setState({ profile });
+        this.setState({ profile }, function() {
+          console.log('profile: ', this.state.profile);
+        });
       });
     } else {
       this.setState({ profile: userProfile });
@@ -58,7 +66,8 @@ class App extends Component {
       return this.state.campaigns.map((campaign, index) => {
         return (
           <Col smOffset={2} sm={10} key={campaign[0].id}>
-            <Radio name="campaign">
+            <Radio name="campaign"
+              value={campaign[0].campaign_name}>
               {campaign[0].campaign_name}
             </Radio>
             {' '}
@@ -68,7 +77,14 @@ class App extends Component {
     }
   }
 
-  updateProfile() {
+  updateProfile(e) {
+    e.preventDefault();
+    console.log('e: ', e.target);
+  }
+
+  handleOnChange(e) {
+    console.log('e.target.name: ', e.target.name);
+    console.log('e.target.value: ', e.target.value);
   }
 
   render() {
@@ -77,7 +93,7 @@ class App extends Component {
 
     return (
       <div>
-      {
+      {/*
         isAuthenticated() && (
           <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -130,14 +146,18 @@ class App extends Component {
 
             <div className="createUser">
               <p>Welcome to Radio Bingo. Please provide a little more information and then select a campaign below to start playing.</p>
-              <Form horizontal>
+              <Form horizontal
+              onChange={(e) => this.handleOnChange(e)}>
 
-                <FormGroup controlId="frmlName">
+                <FormGroup controlId="frmName">
                   <Col componentClass={ControlLabel} sm={2}>
                     First name
                   </Col>
                   <Col sm={6}>
-                    <FormControl type="name" placeholder={profile.nickname} />
+                    <FormControl type="name"
+                      name="frmName"
+                      placeholder={profile.nickname}
+                    />
                   </Col>
                 </FormGroup>
 
@@ -146,7 +166,10 @@ class App extends Component {
                     Surname
                   </Col>
                   <Col sm={6}>
-                    <FormControl type="name" placeholder="Surname" />
+                    <FormControl type="name"
+                      placeholder="Surname"
+                      name="frmSurname"
+                    />
                   </Col>
                 </FormGroup>
 
@@ -155,7 +178,10 @@ class App extends Component {
                     Email
                   </Col>
                   <Col sm={6}>
-                    <FormControl type="email" placeholder={profile.name} />
+                    <FormControl type="email"
+                      placeholder={profile.name}
+                      name="frmEmail"
+                    />
                   </Col>
                 </FormGroup>
 
@@ -164,7 +190,10 @@ class App extends Component {
                     Cell phone number
                   </Col>
                   <Col sm={6}>
-                    <FormControl type="number" placeholder="Give us your digits please" />
+                    <FormControl type="number"
+                    placeholder="Give us your digits please"
+                    name="frmCell"
+                  />
                   </Col>
                 </FormGroup>
 
@@ -191,7 +220,7 @@ class App extends Component {
                   <Col smOffset={2} sm={10}>
                     <Button className="btn btn-primary"
                       type="submit"
-                      onClick="this.updateProfile"
+                      onClick={this.updateProfile}
                     >
                     Save & play
                     </Button>
@@ -200,7 +229,7 @@ class App extends Component {
               </Form>
             </div>
           </div>
-      )}
+      )*/}
       {
         !isAuthenticated() && (
           <nav className="navbar navbar-expand-lg navbar-light bg-light">

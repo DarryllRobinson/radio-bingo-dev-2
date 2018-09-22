@@ -429,12 +429,12 @@ class Card extends Component {
               className="item"
               key={tile[0].id}>
                 <FlexyFlipCard
-                    frontBackgroundColor="#000034"
-                    backBackgroundColor="#000034"
+                    frontBackgroundColor="#000"
+                    backBackgroundColor="#d8410a"
                 >
                   <div ref="flipper">
                     <h3 className="page-header"
-                      style={{marginTop: 46}}>
+                      style={{marginTop: 46, fontSize: 26}}>
                       {tile[0].song}
                     </h3>
                     <Button className="btn btn-primary"
@@ -447,37 +447,27 @@ class Card extends Component {
 
                   <div className="RadioGroup"
                   style={{fontSize: 13, color: "white", textAlign: "left", padding: 3}}>
-                    <Radio
-                        name={`${index}`}
-                        value={'artist_1' + tile[0].artist_1}
-                        onChange={(e) => this.handleOnChange(e)}
-                        selected={tile[0].artist_1_selected}
-                      >
+                    <Button bsSize="large" block
+                      onClick={this.submitArtist}>
                       {tile[0].artist_1}
-                      </Radio>
-                      <Radio name={`${index}`}
-                        value={'artist_2' + tile[0].artist_2}
-                        onChange={(e) => this.handleOnChange(e)}
-                        selected={tile[0].artist_2_selected}
-                      >
+                    </Button>
+                    <Button bsSize="large" block
+                      onClick={this.submitArtist}>
                       {tile[0].artist_2}
-                      </Radio>
-                      <Radio name={`${index}`}
-                        value={'artist_3' + tile[0].artist_3}
-                        onChange={(e) => this.handleOnChange(e)}
-                        selected={tile[0].artist_3_selected}
-                      >
+                    </Button>
+                    <Button bsSize="large" block
+                      onClick={this.submitArtist}>
                       {tile[0].artist_3}
-                      </Radio>
+                    </Button>
                       <div ref="flipper" style={{alignItems: "center"}}>
                       <OverlayTrigger placement="right" overlay={tooltip}>
 
-
                       <Button className="btn btn-primary"
-                          onClick={this.submitArtist}>
-                          Submit artist
-                        </Button>
-                        </OverlayTrigger>
+                        onClick={this.submitArtist}>
+                        Submit artist
+                      </Button>
+
+                      </OverlayTrigger>
                       </div>
                   </div>
                 </FlexyFlipCard>

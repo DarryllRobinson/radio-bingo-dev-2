@@ -145,9 +145,9 @@ input[type="radio"] {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  width: 140px;
+  width: 300px;
   min-height: 157px;
-  border: 2px solid #2f2f2f;
+  border: 2px solid #868889;
   margin-left: .5rem;
   margin-right: .5rem;
   margin-bottom: 1rem;
@@ -156,7 +156,7 @@ input[type="radio"] {
   font-size: 1.125rem;
   transition: .25s;
   padding: 0;
-  background-color: #000034;
+  background-color: #000;
 }
 
 .Radio {
