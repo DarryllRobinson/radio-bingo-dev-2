@@ -56,7 +56,6 @@ Bingo.getTiles = cardId => {
 
 Bingo.getCampaigns = () => {
   const url = `${baseUrl}/campaigns`;
-  console.log('url: ', url);
   return fetch(url).then(response => {
     if (!response.ok) {
       return new Promise(resolve => resolve(null));

@@ -13,6 +13,8 @@ class App extends Component {
     this.state = {
       campaigns: {}
     };
+
+    this.updateProfile = this.updateProfile.bind(this);
   }
 
   componentWillMount() {
@@ -44,12 +46,10 @@ class App extends Component {
     Bingo.getCampaigns().then(response => {
       const list = Object.keys(response).map((index) => {
         const campaign = [];
-        campaign.push(response[index].campaign_name);
+        campaign.push(response[index]);
         return campaign;
       });
-      this.setState({ campaigns: list }, function() {
-        console.log('campaigns: ', this.state.campaigns);
-      });
+      this.setState({ campaigns: list });
     });
   }
 
@@ -59,13 +59,16 @@ class App extends Component {
         return (
           <Col smOffset={2} sm={10} key={campaign[0].id}>
             <Radio name="campaign">
-              {campaign[index]}
+              {campaign[0].campaign_name}
             </Radio>
             {' '}
           </Col>
         )
       })
     }
+  }
+
+  updateProfile() {
   }
 
   render() {
@@ -182,13 +185,16 @@ class App extends Component {
 
                 <FormGroup controlId="frmCampaigns">
                   {this.renderList()}
-                  {/*console.log(this.state.campaigns)*/}
                 </FormGroup>
 
                 <FormGroup>
                   <Col smOffset={2} sm={10}>
                     <Button className="btn btn-primary"
-                      type="submit">Save & play</Button>
+                      type="submit"
+                      onClick="this.updateProfile"
+                    >
+                    Save & play
+                    </Button>
                   </Col>
                 </FormGroup>
               </Form>
