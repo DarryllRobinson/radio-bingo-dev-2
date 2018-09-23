@@ -79,12 +79,32 @@ class App extends Component {
 
   updateProfile(e) {
     e.preventDefault();
-    console.log('e: ', e.target);
+    console.log('updateProfile: ', this.state);
   }
 
   handleOnChange(e) {
-    console.log('e.target.name: ', e.target.name);
-    console.log('e.target.value: ', e.target.value);
+    const name = e.target.name;
+    const value = e.target.value;
+    switch (name) {
+      case 'frmName':
+        console.log(1);
+        this.setState({ firstName: value })
+        break;
+      case 'frmSurname':
+        this.setState({ surname: value })
+        break;
+      case 'frmEmail':
+        this.setState({ email: value })
+        break;
+      case 'frmCell':
+        this.setState({ cell: value })
+        break;
+      case 'frmFile':
+        this.setState({ picture: value })
+        break;
+      default:
+        console.log('problem with switch');
+    }
   }
 
   render() {
@@ -93,7 +113,7 @@ class App extends Component {
 
     return (
       <div>
-      {/*
+      {
         isAuthenticated() && (
           <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -229,7 +249,7 @@ class App extends Component {
               </Form>
             </div>
           </div>
-      )*/}
+      )}
       {
         !isAuthenticated() && (
           <nav className="navbar navbar-expand-lg navbar-light bg-light">
